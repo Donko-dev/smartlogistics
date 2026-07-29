@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Smart Logistics — WMS Offline</title>
+<meta name="theme-color" content="#0a0a0c">
+<link id="manifestLink" rel="manifest">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        base: { 950:'#08090a', 900:'#0f1113', 850:'#14171a', 800:'#1b1f23', 700:'#262b30', 600:'#3a4147' },
+        amber: { DEFAULT:'#f5a524' },
+        neon: '#22d3ee'
+      },
+      fontFamily: { mono: ['ui-monospace','Menlo','monospace'], sans: ['Inter','ui-sans-serif','system-ui'] }
+    }
+  }
+}
+</script>
+<style>
+  * { -webkit-tap-highlight-color: transparent; }
+  body { background: radial-gradient(circle at 20% -10%, #14262b 0%, #08090a 45%) fixed; }
+  ::-webkit-scrollbar { width: 8px; height:8px; }
+  ::-webkit-scrollbar-thumb { background:#2a3136; border-radius:4px; }
+  .grid-cell { transition: all .15s ease; }
+  .grid-cell.suggested { background: #22d3ee !important; color:#08090a; box-shadow: 0 0 18px rgba(34,211,238,.7); transform: scale(1.08); z-index:5; }
+  .fade-in { animation: fadeIn .25s ease; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(6px);} to {opacity:1; transform:none;} }
+  .stripes { background-image: repeating-linear-gradient(135deg, rgba(245,165,36,.12) 0 10px, transparent 10px 20px); }
+  input[type=text], input[type=number], select { color-scheme: dark; }
+  .hidden-imp { display:none !important; }
+</style>
+</head>
+<body class="min-h-screen bg-base-950 text-zinc-200 font-sans antialiased selection:bg-neon selection:text-black">
+
+<!-- ===================== LOCK / PAYWALL SCREEN ===================== -->
+<div id="paywallScreen" class="fixed inset-0 z-[999] overflow-y-auto hidden-imp">
+  <div class="min-h-screen flex flex-col items-center py-8 px-4 stripes">
+    <div class="w-full max-w-3xl">
+
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-lg bg-base-900 border border-amber flex items-center justify-center text-amber font-black text-xl">SL</div>
+          <div>
+            <h1 class="text-lg font-bold tracking-tight text-white">Smart Logistics</h1>
+            <p class="text-[11px] text-zinc-500 font-mono" data-i18n="tag">Warehouse Management System</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="installBtnLock" class="hidden-imp text-xs px-3 py-2 rounded-md border border-neon text-neon font-semibold hover:bg-neon hover:text-black transition" data-i18n="installBtn">Installer l'app</button>
+          <button id="langToggle" class="text-xs font-mono px-3 py-2 rounded-md border border-base-700 hover:border-amber transition">FR / DE</button>
+        </div>
+      </div>
+
+      <div id="trialStatusBox" class="mb-5 p-3 rounded-lg border border-base-700 bg-base-900/80 text-sm hidden-imp"></div>
+
+      <div id="lockedMsgBox" class="mb-5 p-4 rounded-lg border border-red-500/50 bg-red-950/40 text-red-300 text-sm hidden-imp">
+        <p class="font-bold" data-i18n="lockedTitle">🔒 Période d'essai expirée</p>
+        <p data-i18n="lockedDesc">Votre essai gratuit de 7 jours est terminé. Entrez une clé de licence valide pour continuer.</p>
+      </div>
+
+      <!-- Device ID -->
+      <div class="mb-5 p-4 rounded-lg border border-base-700 bg-base-900">
+        <p class="text-[11px] uppercase tracking-widest text-zinc-500 mb-2" data-i18n="deviceIdLabel">Identifiant Machine (Device ID) — à nous transmettre</p>
+        <div class="flex items-center gap-2 flex-wrap">
+          <code id="deviceIdDisplay" class="text-neon font-mono text-lg tracking-wider bg-base-950 px-3 py-2 rounded border border-base-700 flex-1 min-w-[220px] text-center"></code>
+          <button id="copyDeviceId" class="text-xs px-3 py-2.5 rounded border border-base-700 hover:border-amber transition" data-i18n="copyBtn">Copier</button>
+        </div>
+      </div>
+
+      <!-- Key input -->
+      <div class="mb-6 p-4 rounded-lg border border-base-700 bg-base-900">
+        <p class="text-[11px] uppercase tracking-widest text-zinc-500 mb-2" data-i18n="keyLabel">Clé de licence</p>
+        <div class="flex items-center gap-2 flex-wrap">
+          <input id="licenseKeyInput" type="text" placeholder="SL-XXX-XXXX-XXXX" class="flex-1 min-w-[220px] bg-base-950 border border-base-700 focus:border-amber outline-none rounded px-3 py-2.5 font-mono tracking-widest text-center uppercase">
+          <button id="validateKeyBtn" class="px-4 py-2.5 rounded bg-amber text-black font-bold hover:brightness-110 transition" data-i18n="unlockBtn">Débloquer</button>
+        </div>
+        <p id="keyMsg" class="mt-2 text-sm"></p>
+      </div>
+
+      <!-- Pricing grid -->
+      <p class="text-sm font-bold text-zinc-300 mb-3" data-i18n="pricingTitle">Grille tarifaire officielle</p>
+      <div id="pricingGrid" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8"></div>
+
+      <div class="text-center text-xs text-zinc-600 pb-8" data-i18n="footerNote">© 2026 Smart Logistics — Système offline-first. Toute clé est liée à cet appareil.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CONTACT MODAL ===================== -->
+<div id="contactModal" class="fixed inset-0 z-[1000] hidden-imp items-center justify-center bg-black/70 p-4">
+  <div class="bg-base-900 border border-base-700 rounded-xl max-w-sm w-full p-5 fade-in">
+    <p class="text-xs text-zinc-500 mb-1" data-i18n="chosenPlan">Plan sélectionné</p>
+    <p id="contactPlanName" class="text-lg font-bold text-white mb-1"></p>
+    <p id="contactPlanPrice" class="text-amber font-mono mb-4"></p>
+    <p class="text-xs text-zinc-500 mb-3" data-i18n="chooseChannel">Choisissez un canal pour envoyer votre demande (Plan + Device ID inclus) :</p>
+    <div class="flex flex-col gap-2">
+      <a id="waLink1" target="_blank" class="block text-center px-4 py-2.5 rounded bg-green-600 hover:bg-green-500 font-semibold text-white transition">WhatsApp (+229 01 96 80 91 06)</a>
+      <a id="waLink2" target="_blank" class="block text-center px-4 py-2.5 rounded bg-green-700 hover:bg-green-600 font-semibold text-white transition">WhatsApp (+229 01 49 10 57 85)</a>
+      <a id="mailLink" target="_blank" class="block text-center px-4 py-2.5 rounded bg-blue-600 hover:bg-blue-500 font-semibold text-white transition" data-i18n="emailBtn">Email</a>
+    </div>
+    <button id="closeContactModal" class="mt-4 w-full text-xs text-zinc-500 hover:text-zinc-300" data-i18n="cancelBtn">Annuler</button>
+  </div>
+</div>
+
+<!-- ===================== INSTALL INSTRUCTIONS MODAL (iOS) ===================== -->
+<div id="installModal" class="fixed inset-0 z-[1000] hidden-imp items-center justify-center bg-black/70 p-4">
+  <div class="bg-base-900 border border-base-700 rounded-xl max-w-sm w-full p-5 fade-in text-sm">
+    <p class="font-bold text-white mb-2" data-i18n="installTitle">Installer Smart Logistics</p>
+    <p class="text-zinc-400 mb-2" data-i18n="installIOS">iOS / Safari : appuyez sur l'icône Partager, puis « Sur l'écran d'accueil ».</p>
+    <p class="text-zinc-400 mb-4" data-i18n="installAndroid">Android / Chrome : utilisez le bouton « Installer » ou le menu ⋮ → « Installer l'application ».</p>
+    <button id="closeInstallModal" class="w-full text-center px-4 py-2.5 rounded bg-amber text-black font-bold" data-i18n="okBtn">OK</button>
+  </div>
+</div>
+
+<!-- ===================== MAIN APP ===================== -->
+<div id="app" class="hidden-imp">
+  <header class="sticky top-0 z-40 bg-base-950/90 backdrop-blur border-b border-base-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex items-center justify-between gap-2 flex-wrap">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-base-900 border border-amber flex items-center justify-center text-amber font-black">SL</div>
+        <div>
+          <h1 class="text-sm font-bold text-white leading-tight">Smart Logistics</h1>
+          <p class="text-[10px] text-zinc-500 font-mono" id="licenseStatusMini"></p>
+        </div>
+      </div>
+      <nav id="tabsNav" class="flex gap-1 flex-wrap text-xs font-semibold">
+        <button data-tab="inv" class="tab-btn px-3 py-2 rounded-md bg-base-900 border border-base-700" data-i18n="tabInventory">Inventaire</button>
+        <button data-tab="wh" class="tab-btn px-3 py-2 rounded-md bg-base-900 border border-base-700" data-i18n="tabWarehouse">Entrepôt</button>
+        <button data-tab="rep" class="tab-btn px-3 py-2 rounded-md bg-base-900 border border-base-700" data-i18n="tabReport">Rapport</button>
+        <button data-tab="arch" class="tab-btn px-3 py-2 rounded-md bg-base-900 border border-base-700" data-i18n="tabArch">Architecture</button>
+      </nav>
+      <div class="flex items-center gap-2">
+        <button id="installBtnApp" class="hidden-imp text-xs px-3 py-2 rounded-md border border-neon text-neon font-semibold hover:bg-neon hover:text-black transition" data-i18n="installBtn">Installer l'app</button>
+        <button id="langToggleApp" class="text-xs font-mono px-3 py-2 rounded-md border border-base-700 hover:border-amber transition">FR/DE</button>
+      </div>
+    </div>
+    <div id="trialBanner" class="hidden-imp bg-amber/10 border-t border-amber/30 text-amber text-xs text-center py-1.5 font-semibold"></div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 py-6">
+
+    <!-- INVENTORY TAB -->
+    <section id="tab-inv" class="tab-panel">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <h2 class="text-lg font-bold text-white" data-i18n="invTitle">Tableau d'Inventaire Avancé</h2>
+        <button id="addItemBtn" class="px-3 py-2 rounded-md bg-amber text-black text-sm font-bold" data-i18n="addItemBtn">+ Ajouter article</button>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+        <div class="p-3 rounded-lg border border-base-700 bg-base-900">
+          <p class="text-[10px] text-zinc-500 uppercase" data-i18n="statItems">Articles</p>
+          <p id="statItems" class="text-xl font-bold text-white">0</p>
+        </div>
+        <div class="p-3 rounded-lg border border-base-700 bg-base-900">
+          <p class="text-[10px] text-zinc-500 uppercase" data-i18n="statValue">Valeur stock</p>
+          <p id="statValue" class="text-xl font-bold text-neon">0</p>
+        </div>
+        <div class="p-3 rounded-lg border border-base-700 bg-base-900">
+          <p class="text-[10px] text-zinc-500 uppercase" data-i18n="statMargin">Marge moy.</p>
+          <p id="statMargin" class="text-xl font-bold text-green-400">0%</p>
+        </div>
+        <div class="p-3 rounded-lg border border-red-500/40 bg-red-950/30">
+          <p class="text-[10px] text-red-400 uppercase" data-i18n="statLow">Stock critique</p>
+          <p id="statLow" class="text-xl font-bold text-red-400">0</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-lg border border-base-700">
+        <table class="w-full text-sm">
+          <thead class="bg-base-900 text-zinc-400 text-xs uppercase">
+            <tr>
+              <th class="text-left px-3 py-2" data-i18n="colRef">Réf.</th>
+              <th class="text-left px-3 py-2" data-i18n="colName">Désignation</th>
+              <th class="text-center px-3 py-2" data-i18n="colABC">ABC</th>
+              <th class="text-right px-3 py-2" data-i18n="colQty">Qté</th>
+              <th class="text-right px-3 py-2" data-i18n="colCost">Prix revient</th>
+              <th class="text-right px-3 py-2" data-i18n="colSell">Prix vente</th>
+              <th class="text-right px-3 py-2" data-i18n="colMargin">Marge</th>
+              <th class="text-center px-3 py-2"></th>
+            </tr>
+          </thead>
+          <tbody id="invTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- WAREHOUSE TAB -->
+    <section id="tab-wh" class="tab-panel hidden-imp">
+      <h2 class="text-lg font-bold text-white mb-1" data-i18n="whTitle">Placement de Colis — Zero Communication</h2>
+      <p class="text-xs text-zinc-500 mb-4" data-i18n="whDesc">Scannez le colis : la case optimale de l'entrepôt s'illumine automatiquement.</p>
+
+      <div class="grid lg:grid-cols-[320px_1fr] gap-5">
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900 h-fit">
+          <p class="text-[11px] uppercase text-zinc-500 mb-1" data-i18n="scanWeight">Poids du colis (kg)</p>
+          <input id="scanWeight" type="number" min="0" step="0.1" value="5" class="w-full bg-base-950 border border-base-700 rounded px-3 py-2 mb-3 outline-none focus:border-amber">
+          <p class="text-[11px] uppercase text-zinc-500 mb-1" data-i18n="scanAbc">Catégorie de rotation ABC</p>
+          <select id="scanAbc" class="w-full bg-base-950 border border-base-700 rounded px-3 py-2 mb-4 outline-none focus:border-amber">
+            <option value="A" data-i18n="abcA">A — Rotation rapide</option>
+            <option value="B" data-i18n="abcB">B — Rotation moyenne</option>
+            <option value="C" data-i18n="abcC">C — Rotation lente</option>
+          </select>
+          <button id="scanBtn" class="w-full px-4 py-2.5 rounded bg-neon text-black font-bold" data-i18n="scanBtn">Calculer l'emplacement</button>
+          <div id="scanResult" class="mt-4 text-sm p-3 rounded border border-base-700 bg-base-950 hidden-imp"></div>
+        </div>
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900 overflow-x-auto">
+          <div id="warehouseGrid" class="inline-grid gap-1.5"></div>
+          <div class="flex gap-4 mt-4 text-[11px] text-zinc-500 flex-wrap">
+            <span><span class="inline-block w-3 h-3 rounded bg-base-700 mr-1 align-middle"></span><span data-i18n="legendFree">Emplacement libre</span></span>
+            <span><span class="inline-block w-3 h-3 rounded bg-neon mr-1 align-middle"></span><span data-i18n="legendSuggested">Emplacement suggéré</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORT TAB -->
+    <section id="tab-rep" class="tab-panel hidden-imp">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <h2 class="text-lg font-bold text-white" data-i18n="repTitle">Rapport d'Activité Logistique</h2>
+        <button id="exportCsvBtn" class="px-3 py-2 rounded-md border border-base-700 hover:border-amber text-sm font-semibold" data-i18n="exportBtn">⬇ Exporter CSV</button>
+      </div>
+      <div id="reportBody" class="grid md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ARCHITECTURE TAB -->
+    <section id="tab-arch" class="tab-panel hidden-imp">
+      <h2 class="text-lg font-bold text-white mb-1" data-i18n="archTitle">Architecture Technique</h2>
+      <p class="text-xs text-zinc-500 mb-4" data-i18n="archDesc">Diagramme conceptuel — infrastructure cible pour un déploiement futur en réseau.</p>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900">
+          <p class="text-amber font-bold mb-2">☁️ AWS Multi-Region</p>
+          <p class="text-sm text-zinc-400" data-i18n="archAws">Réplication planifiée entre entrepôts, synchronisation asynchrone et sauvegardes S3 chiffrées (roadmap).</p>
+        </div>
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900">
+          <p class="text-neon font-bold mb-2">🔗 Web3 Gateway</p>
+          <p class="text-sm text-zinc-400" data-i18n="archWeb3">Passerelle vers registre distribué pour la traçabilité des mouvements de stock (concept).</p>
+        </div>
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900">
+          <p class="text-green-400 font-bold mb-2">🔒 Offline-First</p>
+          <p class="text-sm text-zinc-400" data-i18n="archOffline">Toutes les données actuelles sont stockées localement (LocalStorage) : fonctionnement garanti sans connexion.</p>
+        </div>
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900">
+          <p class="text-white font-bold mb-2">📡 PWA</p>
+          <p class="text-sm text-zinc-400" data-i18n="archPwa">Application installable sur écran d'accueil (mobile, tablette, ordinateur).</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ===================== ADD ITEM MODAL ===================== -->
+<div id="itemModal" class="fixed inset-0 z-[1000] hidden-imp items-center justify-center bg-black/70 p-4">
+  <div class="bg-base-900 border border-base-700 rounded-xl max-w-md w-full p-5 fade-in">
+    <p class="font-bold text-white mb-3" data-i18n="itemModalTitle">Nouvel article</p>
+    <div class="grid grid-cols-2 gap-3 text-sm">
+      <input id="f_ref" placeholder="Réf." class="col-span-1 bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
+      <input id="f_name" placeholder="Désignation" class="col-span-1 bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
+      <select id="f_abc" class="bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+      </select>
+      <input id="f_qty" type="number" placeholder="Qté" class="bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
+      <input id="f_threshold" type="number" placeholder="Seuil critique" class="bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
+      <input id="f_cost" type="number" placeholder="Prix revient" class="bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
+      <input id="f_sell" type="number" placeholder="Prix vente" class="col-span-2 bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
+    </div>
+    <div class="flex gap-2 mt-4">
+      <button id="saveItemBtn" class="flex-1 px-4 py-2.5 rounded bg-amber text-black font-bold" data-i18n="saveBtn">Enregistrer</button>
+      <button id="closeItemModal" class="px-4 py-2.5 rounded border border-base-700 text-zinc-400" data-i18n="cancelBtn">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   SMART LOGISTICS — OFFLINE-FIRST WMS
+   Licensing engine: device-fingerprint anchored key validation (local only)
+   ========================================================================= */
+
+/* ---------- i18n ---------- */
+const I18N = {
+  fr: {
+    tag:"Système de Gestion d'Entrepôt", installBtn:"Installer l'app",
+    lockedTitle:"🔒 Période d'essai expirée", lockedDesc:"Votre essai gratuit de 7 jours est terminé. Entrez une clé de licence valide pour continuer.",
+    deviceIdLabel:"Identifiant Machine (Device ID) — à nous transmettre", copyBtn:"Copier",
+    keyLabel:"Clé de licence", unlockBtn:"Débloquer", pricingTitle:"Grille tarifaire officielle",
+    footerNote:"© 2026 Smart Logistics — Système offline-first. Toute clé est liée à cet appareil.",
+    chosenPlan:"Plan sélectionné", chooseChannel:"Choisissez un canal pour envoyer votre demande (Plan + Device ID inclus) :",
+    emailBtn:"Email", cancelBtn:"Annuler", installTitle:"Installer Smart Logistics",
+    installIOS:"iOS / Safari : appuyez sur l'icône Partager, puis « Sur l'écran d'accueil ».",
+    installAndroid:"Android / Chrome : utilisez le bouton « Installer » ou le menu ⋮ → « Installer l'application ».",
+    okBtn:"OK", tabInventory:"Inventaire", tabWarehouse:"Entrepôt", tabReport:"Rapport", tabArch:"Architecture",
+    invTitle:"Tableau d'Inventaire Avancé", addItemBtn:"+ Ajouter article",
+    statItems:"Articles", statValue:"Valeur stock", statMargin:"Marge moy.", statLow:"Stock critique",
+    colRef:"Réf.", colName:"Désignation", colABC:"ABC", colQty:"Qté", colCost:"Prix revient", colSell:"Prix vente", colMargin:"Marge",
+    whTitle:"Placement de Colis — Zero Communication", whDesc:"Scannez le colis : la case optimale de l'entrepôt s'illumine automatiquement.",
+    scanWeight:"Poids du colis (kg)", scanAbc:"Catégorie de rotation ABC",
+    abcA:"A — Rotation rapide", abcB:"B — Rotation moyenne", abcC:"C — Rotation lente",
+    scanBtn:"Calculer l'emplacement", legendFree:"Emplacement libre", legendSuggested:"Emplacement suggéré",
+    repTitle:"Rapport d'Activité Logistique", exportBtn:"⬇ Exporter CSV",
+    archTitle:"Architecture Technique", archDesc:"Diagramme conceptuel — infrastructure cible pour un déploiement futur en réseau.",
+    archAws:"Réplication planifiée entre entrepôts, synchronisation asynchrone et sauvegardes S3 chiffrées (roadmap).",
+    archWeb3:"Passerelle vers registre distribué pour la traçabilité des mouvements de stock (concept).",
+    archOffline:"Toutes les données actuelles sont stockées localement (LocalStorage) : fonctionnement garanti sans connexion.",
+    archPwa:"Application installable sur écran d'accueil (mobile, tablette, ordinateur).",
+    itemModalTitle:"Nouvel article", saveBtn:"Enregistrer",
+    trialDays: n => `Essai gratuit — ${n} jour(s) restant(s)`,
+    licValid: exp => exp==='lifetime' ? 'Licence à vie — active' : `Licence active jusqu'au ${exp}`,
+    invalidKey:"❌ Clé invalide pour cet appareil.", validKey:"✅ Clé validée ! Déverrouillage en cours…",
+    reportItems:"Nombre d'articles", reportUnits:"Unités en stock", reportValue:"Valeur totale du stock",
+    reportMargin:"Marge moyenne", reportLow:"Articles en stock critique",
+    scanResultTitle:"Emplacement suggéré", justification:"Justification",
+  },
+  de: {
+    tag:"Lagerverwaltungssystem", installBtn:"App installieren",
+    lockedTitle:"🔒 Testphase abgelaufen", lockedDesc:"Ihre 7-tägige kostenlose Testphase ist beendet. Geben Sie einen gültigen Lizenzschlüssel ein.",
+    deviceIdLabel:"Geräte-ID (Device ID) — bitte an uns senden", copyBtn:"Kopieren",
+    keyLabel:"Lizenzschlüssel", unlockBtn:"Freischalten", pricingTitle:"Offizielle Preisliste",
+    footerNote:"© 2026 Smart Logistics — Offline-First-System. Jeder Schlüssel ist an dieses Gerät gebunden.",
+    chosenPlan:"Gewählter Tarif", chooseChannel:"Wählen Sie einen Kanal für Ihre Anfrage (Tarif + Geräte-ID enthalten):",
+    emailBtn:"E-Mail", cancelBtn:"Abbrechen", installTitle:"Smart Logistics installieren",
+    installIOS:"iOS / Safari: Tippen Sie auf „Teilen“, dann „Zum Home-Bildschirm“.",
+    installAndroid:"Android / Chrome: Nutzen Sie „Installieren“ oder Menü ⋮ → „App installieren“.",
+    okBtn:"OK", tabInventory:"Inventar", tabWarehouse:"Lager", tabReport:"Bericht", tabArch:"Architektur",
+    invTitle:"Erweiterte Bestandsübersicht", addItemBtn:"+ Artikel hinzufügen",
+    statItems:"Artikel", statValue:"Lagerwert", statMargin:"Ø Marge", statLow:"Kritischer Bestand",
+    colRef:"Ref.", colName:"Bezeichnung", colABC:"ABC", colQty:"Menge", colCost:"Selbstkosten", colSell:"Verkaufspreis", colMargin:"Marge",
+    whTitle:"Paketplatzierung — Zero Communication", whDesc:"Paket scannen: Der optimale Lagerplatz leuchtet automatisch auf.",
+    scanWeight:"Paketgewicht (kg)", scanAbc:"ABC-Umschlagskategorie",
+    abcA:"A — Schneller Umschlag", abcB:"B — Mittlerer Umschlag", abcC:"C — Langsamer Umschlag",
+    scanBtn:"Lagerplatz berechnen", legendFree:"Freier Platz", legendSuggested:"Vorgeschlagener Platz",
+    repTitle:"Logistik-Aktivitätsbericht", exportBtn:"⬇ CSV exportieren",
+    archTitle:"Technische Architektur", archDesc:"Konzeptionelles Diagramm — Zielinfrastruktur für eine zukünftige Netzwerkbereitstellung.",
+    archAws:"Geplante Replikation zwischen Lagern, asynchrone Synchronisierung und verschlüsselte S3-Backups (Roadmap).",
+    archWeb3:"Gateway zu einem verteilten Register für die Rückverfolgbarkeit von Lagerbewegungen (Konzept).",
+    archOffline:"Alle aktuellen Daten werden lokal gespeichert (LocalStorage): garantierter Betrieb ohne Verbindung.",
+    archPwa:"App auf dem Startbildschirm installierbar (Mobil, Tablet, Computer).",
+    itemModalTitle:"Neuer Artikel", saveBtn:"Speichern",
+    trialDays: n => `Kostenlose Testphase — noch ${n} Tag(e)`,
+    licValid: exp => exp==='lifetime' ? 'Lebenslange Lizenz — aktiv' : `Lizenz aktiv bis ${exp}`,
+    invalidKey:"❌ Ungültiger Schlüssel für dieses Gerät.", validKey:"✅ Schlüssel gültig! Wird entsperrt…",
+    reportItems:"Anzahl Artikel", reportUnits:"Einheiten auf Lager", reportValue:"Gesamtlagerwert",
+    reportMargin:"Ø Marge", reportLow:"Artikel mit kritischem Bestand",
+    scanResultTitle:"Vorgeschlagener Platz", justification:"Begründung",
+  }
+};
+let LANG = localStorage.getItem('sl_lang') || 'fr';
+function t(key, ...args){ const v = I18N[LANG][key]; return typeof v==='function' ? v(...args) : v; }
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    if(I18N[LANG][k]) el.textContent = typeof I18N[LANG][k]==='function' ? '' : I18N[LANG][k];
+  });
+  document.documentElement.lang = LANG;
+  renderPricing(); renderInventory(); renderReport(); updateTrialUi();
+}
+
+/* ---------- PRICING (F CFA) ---------- */
+const PLANS = [
+  {code:'M1', days:30,   fr:'Mensuel (30 jours)',   de:'Monatlich (30 Tage)',   price:25500},
+  {code:'M2', days:60,   fr:'Bimestriel (60 jours)',de:'Zweimonatlich (60 Tage)',price:45800},
+  {code:'M3', days:90,   fr:'Trimestriel (90 jours)',de:'Vierteljährlich (90 Tage)',price:63800},
+  {code:'S1', days:180,  fr:'Semestriel (180 jours)',de:'Halbjährlich (180 Tage)',price:115000},
+  {code:'A1', days:365,  fr:'Annuel (365 jours)',   de:'Jährlich (365 Tage)',    price:190000},
+  {code:'A2', days:730,  fr:'2 ans (730 jours)',    de:'2 Jahre (730 Tage)',     price:318000},
+  {code:'A3', days:1095, fr:'3 ans (1095 jours)',   de:'3 Jahre (1095 Tage)',    price:418000},
+  {code:'VIE',days:99999,fr:'À vie (Accès illimité)',de:'Lebenslang (Unbegrenzt)',price:950000}
+];
+function fmtPrice(n){ return n.toLocaleString('fr-FR').replace(/,/g,' ') + ' F CFA'; }
+
+function renderPricing(){
+  const grid = document.getElementById('pricingGrid');
+  grid.innerHTML = '';
+  PLANS.forEach(p=>{
+    const card = document.createElement('div');
+    card.className = 'p-3 rounded-lg border border-base-700 bg-base-900 hover:border-amber transition cursor-pointer flex flex-col justify-between';
+    card.innerHTML = `
+      <div>
+        <p class="text-xs text-zinc-400 mb-1">${LANG==='fr'?p.fr:p.de}</p>
+        <p class="text-amber font-mono font-bold text-sm">${fmtPrice(p.price)}</p>
+      </div>
+      <button class="mt-3 text-[11px] px-2 py-1.5 rounded bg-base-800 hover:bg-amber hover:text-black font-semibold transition">${LANG==='fr'?'Choisir':'Wählen'}</button>`;
+    card.querySelector('button').addEventListener('click', ()=>openContactModal(p));
+    grid.appendChild(card);
+  });
+}
+
+/* ---------- HASH / LICENSE ENGINE (local, secret-salted) ---------- */
+const SECRET_SALT = "SL-DONKO-EMPIRE-2026-WMS-#Xk9qP";
+function djb2(str){
+  let h = 5381;
+  for(let i=0;i<str.length;i++){ h = ((h*33) ^ str.charCodeAt(i)) >>> 0; }
+  return h >>> 0;
+}
+function genCode(deviceId, days){
+  const raw = deviceId + "|" + days + "|" + SECRET_SALT;
+  const h1 = djb2(raw).toString(36);
+  const h2 = djb2(raw.split('').reverse().join('')).toString(36);
+  let code = (h1 + h2).toUpperCase().replace(/[^A-Z0-9]/g,'').padEnd(8,'0').substring(0,8);
+  return code.substring(0,4) + '-' + code.substring(4,8);
+}
+function codeForDays(days){
+  const plan = PLANS.find(p=>p.days===days);
+  return plan ? plan.code : null;
+}
+function daysForCode(code){
+  const plan = PLANS.find(p=>p.code===code);
+  return plan ? plan.days : null;
+}
+function buildLicenseKey(deviceId, days){
+  const dc = codeForDays(days);
+  if(!dc) return null;
+  return `SL-${dc}-${genCode(deviceId, days)}`;
+}
+function validateLicenseKey(inputKey, deviceId){
+  const key = (inputKey||'').trim().toUpperCase();
+  const parts = key.split('-');
+  if(parts.length !== 4 || parts[0] !== 'SL') return {valid:false};
+  const dc = parts[1];
+  const days = daysForCode(dc);
+  if(!days) return {valid:false};
+  const suppliedCode = parts[2] + '-' + parts[3];
+  const expectedCode = genCode(deviceId, days);
+  if(suppliedCode !== expectedCode) return {valid:false};
+  return {valid:true, days};
+}
+// Developer helper (console use only) — generate a key once the customer sends their Device ID.
+window.slGenerateKey = function(deviceId, days){ return buildLicenseKey(deviceId, days); };
+
+/* ---------- DEVICE FINGERPRINT ---------- */
+function getDeviceId(){
+  let stored = localStorage.getItem('sl_device_id');
+  if(stored) return stored;
+  let canvasData = '';
+  try{
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.textBaseline = 'top'; ctx.font = '14px Arial';
+    ctx.fillStyle = '#f5a524'; ctx.fillRect(0,0,120,20);
+    ctx.fillStyle = '#08090a'; ctx.fillText('SmartLogistics-FP-2026', 2, 2);
+    canvasData = canvas.toDataURL();
+  }catch(e){ canvasData = 'no-canvas'; }
+  const raw = [navigator.userAgent, navigator.platform||'', screen.width+'x'+screen.height, screen.colorDepth, canvasData].join('::');
+  let id = djb2(raw).toString(36).toUpperCase() + djb2(raw.split('').reverse().join('')).toString(36).toUpperCase();
+  id = id.replace(/[^A-Z0-9]/g,'').padEnd(12,'0').substring(0,12);
+  localStorage.setItem('sl_device_id', id);
+  return id;
+}
+
+/* ---------- LICENSE STATE ---------- */
+const DEVICE_ID = getDeviceId();
+const DAY_MS = 86400000;
+
+function getInstallDate(){
+  let d = localStorage.getItem('sl_install_date');
+  if(!d){ d = Date.now().toString(); localStorage.setItem('sl_install_date', d); }
+  return parseInt(d,10);
+}
+function getStoredLicense(){
+  const key = localStorage.getItem('sl_license_key');
+  const expiry = localStorage.getItem('sl_license_expiry'); // 'lifetime' or timestamp
+  if(!key || !expiry) return null;
+  return { key, expiry };
+}
+function isLicenseActive(){
+  const lic = getStoredLicense();
+  if(!lic) return false;
+  if(lic.expiry === 'lifetime') return true;
+  return Date.now() < parseInt(lic.expiry,10);
+}
+function trialDaysLeft(){
+  const installDate = getInstallDate();
+  const elapsed = Date.now() - installDate;
+  const left = 7 - Math.floor(elapsed / DAY_MS);
+  return left;
+}
+function isTrialActive(){ return trialDaysLeft() > 0; }
+
+function applyLicenseKey(inputKey){
+  const res = validateLicenseKey(inputKey, DEVICE_ID);
+  const msgEl = document.getElementById('keyMsg');
+  if(!res.valid){
+    msgEl.textContent = t('invalidKey');
+    msgEl.className = 'mt-2 text-sm text-red-400';
+    return false;
+  }
+  const expiry = res.days === 99999 ? 'lifetime' : (Date.now() + res.days*DAY_MS).toString();
+  localStorage.setItem('sl_license_key', inputKey.trim().toUpperCase());
+  localStorage.setItem('sl_license_expiry', expiry);
+  msgEl.textContent = t('validKey');
+  msgEl.className = 'mt-2 text-sm text-green-400';
+  setTimeout(boot, 700);
+  return true;
+}
+
+/* ---------- BOOT / GATE ---------- */
+function boot(){
+  document.getElementById('deviceIdDisplay').textContent = DEVICE_ID;
+  const licensed = isLicenseActive();
+  const trialOk = isTrialActive();
+
+  if(licensed || trialOk){
+    document.getElementById('paywallScreen').classList.add('hidden-imp');
+    document.getElementById('app').classList.remove('hidden-imp');
+    updateTrialUi();
+    renderInventory(); renderWarehouseGrid(); renderReport();
+    showTab('inv');
+  } else {
+    document.getElementById('app').classList.add('hidden-imp');
+    document.getElementById('paywallScreen').classList.remove('hidden-imp');
+    document.getElementById('lockedMsgBox').classList.remove('hidden-imp');
+    document.getElementById('trialStatusBox').classList.add('hidden-imp');
+  }
+}
+
+function updateTrialUi(){
+  const licensed = isLicenseActive();
+  const banner = document.getElementById('trialBanner');
+  const mini = document.getElementById('licenseStatusMini');
+  const trialBox = document.getElementById('trialStatusBox');
+  if(licensed){
+    const lic = getStoredLicense();
+    const expiryStr = lic.expiry === 'lifetime' ? 'lifetime' : new Date(parseInt(lic.expiry,10)).toLocaleDateString(LANG==='fr'?'fr-FR':'de-DE');
+    banner.classList.add('hidden-imp');
+    mini.textContent = t('licValid', expiryStr);
+    trialBox.classList.add('hidden-imp');
+  } else {
+    const left = Math.max(trialDaysLeft(),0);
+    banner.textContent = t('trialDays', left);
+    banner.classList.remove('hidden-imp');
+    mini.textContent = t('trialDays', left);
+    trialBox.textContent = t('trialDays', left);
+    trialBox.classList.remove('hidden-imp');
+  }
+}
+
+/* ---------- TABS ---------- */
+function showTab(tab){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden-imp'));
+  document.getElementById('tab-'+tab).classList.remove('hidden-imp');
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('border-amber', b.dataset.tab===tab);
+    b.classList.toggle('text-amber', b.dataset.tab===tab);
+  });
+  if(tab==='wh') renderWarehouseGrid();
+  if(tab==='rep') renderReport();
+}
+document.getElementById('tabsNav').addEventListener('click', e=>{
+  const btn = e.target.closest('.tab-btn');
+  if(btn) showTab(btn.dataset.tab);
+});
+
+/* ---------- INVENTORY ---------- */
+function getInventory(){ try{ return JSON.parse(localStorage.getItem('sl_inventory')||'[]'); }catch(e){ return []; } }
+function setInventory(arr){ localStorage.setItem('sl_inventory', JSON.stringify(arr)); }
+
+function renderInventory(){
+  const inv = getInventory();
+  const tbody = document.getElementById('invTableBody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  let totalValue=0, marginSum=0, marginCount=0, lowCount=0;
+  inv.forEach(item=>{
+    const margin = item.sell - item.cost;
+    const marginPct = item.cost>0 ? (margin/item.cost*100) : 0;
+    totalValue += item.qty*item.cost;
+    marginSum += marginPct; marginCount++;
+    const isLow = item.qty < item.threshold;
+    if(isLow) lowCount++;
+    const tr = document.createElement('tr');
+    tr.className = 'border-t border-base-800 ' + (isLow ? 'bg-red-950/40' : '');
+    tr.innerHTML = `
+      <td class="px-3 py-2 font-mono text-xs">${item.ref}</td>
+      <td class="px-3 py-2">${item.name}</td>
+      <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.abc==='A'?'bg-green-600':item.abc==='B'?'bg-amber text-black':'bg-zinc-600'}">${item.abc}</span></td>
+      <td class="px-3 py-2 text-right ${isLow?'text-red-400 font-bold':''}">${item.qty}</td>
+      <td class="px-3 py-2 text-right font-mono">${item.cost.toLocaleString()}</td>
+      <td class="px-3 py-2 text-right font-mono">${item.sell.toLocaleString()}</td>
+      <td class="px-3 py-2 text-right font-mono ${margin>=0?'text-green-400':'text-red-400'}">${marginPct.toFixed(1)}%</td>
+      <td class="px-3 py-2 text-center"><button data-id="${item.id}" class="delItemBtn text-zinc-500 hover:text-red-400">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('statItems').textContent = inv.length;
+  document.getElementById('statValue').textContent = totalValue.toLocaleString();
+  document.getElementById('statMargin').textContent = (marginCount ? (marginSum/marginCount).toFixed(1) : 0) + '%';
+  document.getElementById('statLow').textContent = lowCount;
+  tbody.querySelectorAll('.delItemBtn').forEach(b=>b.addEventListener('click', ()=>{
+    setInventory(getInventory().filter(i=>i.id!==b.dataset.id));
+    renderInventory();
+  }));
+}
+
+document.getElementById('addItemBtn').addEventListener('click', ()=>{
+  ['f_ref','f_name','f_qty','f_threshold','f_cost','f_sell'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f_abc').value = 'A';
+  document.getElementById('itemModal').classList.remove('hidden-imp');
+  document.getElementById('itemModal').classList.add('flex');
+});
+document.getElementById('closeItemModal').addEventListener('click', ()=>{
+  document.getElementById('itemModal').classList.add('hidden-imp');
+  document.getElementById('itemModal').classList.remove('flex');
+});
+document.getElementById('saveItemBtn').addEventListener('click', ()=>{
+  const item = {
+    id: 'it_'+Date.now(),
+    ref: document.getElementById('f_ref').value || '—',
+    name: document.getElementById('f_name').value || '—',
+    abc: document.getElementById('f_abc').value,
+    qty: parseFloat(document.getElementById('f_qty').value)||0,
+    threshold: parseFloat(document.getElementById('f_threshold').value)||0,
+    cost: parseFloat(document.getElementById('f_cost').value)||0,
+    sell: parseFloat(document.getElementById('f_sell').value)||0,
+  };
+  const inv = getInventory(); inv.push(item); setInventory(inv);
+  renderInventory();
+  document.getElementById('itemModal').classList.add('hidden-imp');
+  document.getElementById('itemModal').classList.remove('flex');
+});
+
+/* ---------- WAREHOUSE GRID / PLACEMENT ALGORITHM ---------- */
+const WH_CONFIG = { aisles:5, levels:4, shelves:6 };
+function renderWarehouseGrid(suggested=null){
+  const grid = document.getElementById('warehouseGrid');
+  if(!grid) return;
+  grid.style.gridTemplateColumns = `repeat(${WH_CONFIG.shelves}, minmax(34px,1fr))`;
+  grid.innerHTML = '';
+  for(let level=WH_CONFIG.levels; level>=1; level--){
+    for(let aisle=1; aisle<=WH_CONFIG.aisles; aisle++){
+      for(let shelf=1; shelf<=1; shelf++){ /* placeholder loop kept for structure */ }
+    }
+  }
+  // Build a simple aisle x level grid (columns = aisles, rows = levels), each cell = one shelf slot
+  grid.style.gridTemplateColumns = `repeat(${WH_CONFIG.aisles}, minmax(46px,1fr))`;
+  for(let level=WH_CONFIG.levels; level>=1; level--){
+    for(let aisle=1; aisle<=WH_CONFIG.aisles; aisle++){
+      const id = `A${aisle}-N${level}`;
+      const cell = document.createElement('div');
+      cell.className = 'grid-cell w-12 h-10 flex items-center justify-center text-[10px] font-mono rounded border border-base-700 bg-base-800 text-zinc-500';
+      cell.textContent = id;
+      cell.dataset.cellId = id;
+      if(suggested === id) cell.classList.add('suggested');
+      grid.appendChild(cell);
+    }
+  }
+}
+function computeOptimalCell(weight, abc){
+  let level;
+  if(weight > 20) level = 1;
+  else if(abc==='A') level = 1;
+  else if(abc==='B') level = 2;
+  else level = WH_CONFIG.levels;
+
+  let aisle;
+  if(abc==='A') aisle = 1;
+  else if(abc==='B') aisle = Math.ceil(WH_CONFIG.aisles/2);
+  else aisle = WH_CONFIG.aisles;
+
+  level = Math.min(Math.max(level,1), WH_CONFIG.levels);
+  aisle = Math.min(Math.max(aisle,1), WH_CONFIG.aisles);
+  return { id:`A${aisle}-N${level}`, aisle, level };
+}
+document.getElementById('scanBtn').addEventListener('click', ()=>{
+  const weight = parseFloat(document.getElementById('scanWeight').value)||0;
+  const abc = document.getElementById('scanAbc').value;
+  const res = computeOptimalCell(weight, abc);
+  renderWarehouseGrid(res.id);
+  const box = document.getElementById('scanResult');
+  box.classList.remove('hidden-imp');
+  const reason = LANG==='fr'
+    ? `Poids: ${weight} kg · Catégorie ${abc}. ${weight>20 ? "Poids élevé → niveau bas imposé (ergonomie)." : (abc==='A'?"Rotation rapide → allée proche de l'entrée, niveau accessible.":abc==='B'?"Rotation moyenne → allée et niveau intermédiaires.":"Rotation lente → allée éloignée, niveau haut.")}`
+    : `Gewicht: ${weight} kg · Kategorie ${abc}. ${weight>20 ? "Hohes Gewicht → niedrige Ebene (Ergonomie)." : (abc==='A'?"Schneller Umschlag → Gang nahe Eingang, gut erreichbar.":abc==='B'?"Mittlerer Umschlag → mittlerer Gang/Ebene.":"Langsamer Umschlag → entfernter Gang, obere Ebene.")}`;
+  box.innerHTML = `<p class="font-bold text-neon mb-1">${t('scanResultTitle')}: ${res.id}</p><p class="text-zinc-400 text-xs">${t('justification')}: ${reason}</p>`;
+});
+
+/* ---------- REPORT ---------- */
+function renderReport(){
+  const body = document.getElementById('reportBody');
+  if(!body) return;
+  const inv = getInventory();
+  const totalUnits = inv.reduce((s,i)=>s+i.qty,0);
+  const totalValue = inv.reduce((s,i)=>s+i.qty*i.cost,0);
+  const margins = inv.filter(i=>i.cost>0).map(i=>((i.sell-i.cost)/i.cost*100));
+  const avgMargin = margins.length ? (margins.reduce((a,b)=>a+b,0)/margins.length) : 0;
+  const lowCount = inv.filter(i=>i.qty<i.threshold).length;
+  const stats = [
+    [t('reportItems'), inv.length],
+    [t('reportUnits'), totalUnits],
+    [t('reportValue'), totalValue.toLocaleString()+' '],
+    [t('reportMargin'), avgMargin.toFixed(1)+'%'],
+    [t('reportLow'), lowCount],
+  ];
+  body.innerHTML = stats.map(([label,val])=>`
+    <div class="p-4 rounded-lg border border-base-700 bg-base-900">
+      <p class="text-[11px] uppercase text-zinc-500 mb-1">${label}</p>
+      <p class="text-2xl font-bold text-white">${val}</p>
+    </div>`).join('');
+}
+document.getElementById('exportCsvBtn').addEventListener('click', ()=>{
+  const inv = getInventory();
+  let csv = 'Ref;Name;ABC;Qty;Threshold;Cost;Sell;MarginPct\n';
+  inv.forEach(i=>{
+    const mp = i.cost>0 ? ((i.sell-i.cost)/i.cost*100).toFixed(1) : '0';
+    csv += `${i.ref};${i.name};${i.abc};${i.qty};${i.threshold};${i.cost};${i.sell};${mp}\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'smart_logistics_rapport.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+});
+
+/* ---------- PAYWALL EVENTS ---------- */
+document.getElementById('validateKeyBtn').addEventListener('click', ()=>{
+  applyLicenseKey(document.getElementById('licenseKeyInput').value);
+});
+document.getElementById('licenseKeyInput').addEventListener('keydown', e=>{ if(e.key==='Enter') applyLicenseKey(e.target.value); });
+document.getElementById('copyDeviceId').addEventListener('click', ()=>{
+  navigator.clipboard.writeText(DEVICE_ID).then(()=>{
+    const b = document.getElementById('copyDeviceId');
+    const old = b.textContent; b.textContent = LANG==='fr'?'Copié !':'Kopiert!';
+    setTimeout(()=>b.textContent=old, 1500);
+  });
+});
+
+/* ---------- CONTACT MODAL ---------- */
+const WA1 = '22901968091'.startsWith('229') ? '2290196809106' : '2290196809106';
+const WA_NUM_1 = '2290196809106';
+const WA_NUM_2 = '2290149105785';
+const EMAILS = ['empiredonko@gmail.com','hassanedonko9@gmail.com','hassanedonko10@gmail.com'];
+
+function openContactModal(plan){
+  const planLabel = LANG==='fr'?plan.fr:plan.de;
+  document.getElementById('contactPlanName').textContent = planLabel;
+  document.getElementById('contactPlanPrice').textContent = fmtPrice(plan.price);
+  const text = `Smart Logistics — Commande\nPlan: ${planLabel}\nPrix: ${fmtPrice(plan.price)}\nDevice ID: ${DEVICE_ID}`;
+  document.getElementById('waLink1').href = `https://wa.me/${WA_NUM_1}?text=${encodeURIComponent(text)}`;
+  document.getElementById('waLink2').href = `https://wa.me/${WA_NUM_2}?text=${encodeURIComponent(text)}`;
+  document.getElementById('mailLink').href = `mailto:${EMAILS.join(',')}?subject=${encodeURIComponent('Commande Smart Logistics — '+planLabel)}&body=${encodeURIComponent(text)}`;
+  const modal = document.getElementById('contactModal');
+  modal.classList.remove('hidden-imp'); modal.classList.add('flex');
+}
+document.getElementById('closeContactModal').addEventListener('click', ()=>{
+  const modal = document.getElementById('contactModal');
+  modal.classList.add('hidden-imp'); modal.classList.remove('flex');
+});
+
+/* ---------- LANG TOGGLE ---------- */
+function toggleLang(){
+  LANG = LANG==='fr' ? 'de' : 'fr';
+  localStorage.setItem('sl_lang', LANG);
+  applyLang();
+}
+document.getElementById('langToggle').addEventListener('click', toggleLang);
+document.getElementById('langToggleApp').addEventListener('click', toggleLang);
+
+/* ---------- PWA: manifest + service worker + install prompt ---------- */
+(function setupPwa(){
+  const manifest = {
+    name: "Smart Logistics",
+    short_name: "SmartLog",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#08090a",
+    theme_color: "#08090a",
+    icons: [
+      { src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192'><rect width='192' height='192' fill='%23f5a524'/><text x='50%' y='58%' font-size='90' text-anchor='middle' fill='%2308090a' font-family='sans-serif' font-weight='bold'>SL</text></svg>`), sizes:"192x192", type:"image/svg+xml" }
+    ]
+  };
+  try{
+    const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+    document.getElementById('manifestLink').href = URL.createObjectURL(blob);
+  }catch(e){}
+
+  if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
+    try{
+      const swCode = `
+        self.addEventListener('install', e=>self.skipWaiting());
+        self.addEventListener('activate', e=>self.clients.claim());
+        self.addEventListener('fetch', e=>{});
+      `;
+      const swBlob = new Blob([swCode], {type:'application/javascript'});
+      const swUrl = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swUrl).catch(()=>{});
+    }catch(e){}
+  }
+
+  let deferredPrompt = null;
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  window.addEventListener('beforeinstallprompt', (e)=>{
+    e.preventDefault();
+    deferredPrompt = e;
+    if(!isStandalone){
+      document.getElementById('installBtnLock').classList.remove('hidden-imp');
+      document.getElementById('installBtnApp').classList.remove('hidden-imp');
+    }
+  });
+  function handleInstallClick(){
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.finally(()=>{ deferredPrompt=null; });
+    } else {
+      const modal = document.getElementById('installModal');
+      modal.classList.remove('hidden-imp'); modal.classList.add('flex');
+    }
+  }
+  document.getElementById('installBtnLock').addEventListener('click', handleInstallClick);
+  document.getElementById('installBtnApp').addEventListener('click', handleInstallClick);
+  document.getElementById('closeInstallModal').addEventListener('click', ()=>{
+    const modal = document.getElementById('installModal');
+    modal.classList.add('hidden-imp'); modal.classList.remove('flex');
+  });
+  // iOS has no beforeinstallprompt — always offer manual instructions button
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(isIOS && !isStandalone){
+    document.getElementById('installBtnLock').classList.remove('hidden-imp');
+    document.getElementById('installBtnApp').classList.remove('hidden-imp');
+  }
+})();
+
+/* ---------- INIT ---------- */
+applyLang();
+boot();
+setInterval(()=>{ if(!isLicenseActive()) boot(); }, 60000);
+</script>
+</body>
+</html>
