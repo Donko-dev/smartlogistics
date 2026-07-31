@@ -22,6 +22,8 @@
 <meta name="twitter:image" content="./logo.png">
 
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACN0lEQVR4nO2XP2gTYRiHn/suaXK5i7WJgsSCOAhWwUXoUv+g1UXUoehQsKBgdZMq1UlBHAVpnQRxEBxtQLoURJSOhroU2sGhQymlQtPG9swlqblzkMj1csnF3p3t4G86vnt5f8/3fS937yvhoriSsNzW/apkFCXn2qYFu3H+VSZQ8/TNRVeQPw8186CNG4HUIKRG5nbiIOSWu2QUJdEsIEjZc9q9hLPgwjBvlDuuJCxhJwrT3AlR8xTNgv+F/gNEvAJkAYO9KtdOqBzYIxORoVix+FYweTy2xvvpEgBv76Y5ezTGim5yaGgpOIDhi0keXE7yaabMlZE8esnkcCZKf49Ce6Luy/rX8gTo70kA8HGmzFKhCsDUXIWpuYpv85YAOtTfZTJ0QaMtApOzZabnN6iagfh7F+HkbBmAtCZ41LeLDw/38nV0H88G2klp/mvYM8O9NwXGvxj8tO14d0Jw/bTKy8EO3wCeV7C8bnLjxSop7TtnjsQ4fyxOX7eCLOBUV4yoLLFR3Xr74AlQ04puks0ZZHMGqz9MbvWq6CXTlzm0cAXvhtPcPqfStT+C0ibRmZI5fjAKwNhnw5c5tHAC88tVBk6q3L+URItLWBYs5KuMTug8HV+vi09poq6peT6h8yS7tjWAO68LXiEAXB3JtxTn1Lb/C7YdwPMKMrkFXwaL3Z1N3+/8E/DagV8JqO/TwpSz/xTOcSlMCGfuTXNBo749DHO7184YzZwQYYB4DqeNQIKU23j+C9bq0ERLBXcvAAAAAElFTkSuQmCC">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./logo.png">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -81,7 +83,7 @@ tailwind.config = { theme: { extend: { colors: { base: { 950:'#08090a',900:'#0f1
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button id="installBtnLock" class="hidden-imp text-xs px-3 py-2 rounded-md border neon-border neon-text font-semibold hover:brightness-125 transition" data-i18n="installBtn">Installer l'app</button>
+          <button id="installBtnLock" class="text-xs px-3 py-2 rounded-md border neon-border neon-text font-semibold hover:brightness-125 transition" data-i18n="installBtn">Installer l'app</button>
           <button id="langToggle" class="text-xs font-mono px-3 py-2 rounded-md border border-base-700 hover:accent-text transition">FR / DE</button>
         </div>
       </div>
@@ -142,7 +144,8 @@ tailwind.config = { theme: { extend: { colors: { base: { 950:'#08090a',900:'#0f1
   <div class="bg-base-900 border border-base-700 rounded-xl max-w-sm w-full p-5 fade-in text-sm">
     <p class="font-bold text-white mb-2" data-i18n="installTitle">Installer Smart Logistics</p>
     <p class="text-zinc-400 mb-2" data-i18n="installIOS">iOS / Safari : appuyez sur l'icône Partager, puis « Sur l'écran d'accueil ».</p>
-    <p class="text-zinc-400 mb-4" data-i18n="installAndroid">Android / Chrome : utilisez le bouton « Installer » ou le menu ⋮ → « Installer l'application ».</p>
+    <p class="text-zinc-400 mb-2" data-i18n="installAndroid">Android / Chrome : utilisez le bouton « Installer » ou le menu ⋮ → « Installer l'application ».</p>
+    <p class="text-zinc-400 mb-4" data-i18n="installDesktop">Ordinateur (Chrome/Edge) : cliquez sur l'icône ⊕ / Installer dans la barre d'adresse, ou menu ⋮ → « Installer Smart Logistics ».</p>
     <button id="closeInstallModal" class="w-full text-center px-4 py-2.5 rounded accent-bg font-bold" data-i18n="okBtn">OK</button>
   </div>
 </div>
@@ -182,7 +185,7 @@ tailwind.config = { theme: { extend: { colors: { base: { 950:'#08090a',900:'#0f1
       </div>
       <nav id="tabsNav" class="flex gap-1 flex-wrap text-xs font-semibold"></nav>
       <div class="flex items-center gap-2">
-        <button id="installBtnApp" class="hidden-imp text-xs px-3 py-2 rounded-md border neon-border neon-text font-semibold hover:brightness-125 transition" data-i18n="installBtn">Installer l'app</button>
+        <button id="installBtnApp" class="text-xs px-3 py-2 rounded-md border neon-border neon-text font-semibold hover:brightness-125 transition" data-i18n="installBtn">Installer l'app</button>
         <button id="langToggleApp" class="text-xs font-mono px-3 py-2 rounded-md border border-base-700">FR/DE</button>
       </div>
     </div>
@@ -407,6 +410,7 @@ const I18N = {
     emailBtn:"Email", cancelBtn:"Annuler", installTitle:"Installer Smart Logistics",
     installIOS:"iOS / Safari : appuyez sur l'icône Partager, puis « Sur l'écran d'accueil ».",
     installAndroid:"Android / Chrome : utilisez le bouton « Installer » ou le menu ⋮ → « Installer l'application ».",
+    installDesktop:"Ordinateur (Chrome/Edge) : cliquez sur l'icône ⊕ / Installer dans la barre d'adresse, ou menu ⋮ → « Installer Smart Logistics ».",
     okBtn:"OK", saveBtn:"Enregistrer",
     invTitle:"Tableau d'Inventaire Avancé", addItemBtn:"+ Ajouter article", searchPh:"Rechercher un article (réf. ou nom)…",
     statItems:"Articles", statValue:"Valeur stock", statMargin:"Marge moy.", statLow:"Stock critique",
@@ -449,6 +453,7 @@ const I18N = {
     emailBtn:"E-Mail", cancelBtn:"Abbrechen", installTitle:"Smart Logistics installieren",
     installIOS:"iOS / Safari: Tippen Sie auf „Teilen“, dann „Zum Home-Bildschirm“.",
     installAndroid:"Android / Chrome: Nutzen Sie „Installieren“ oder Menü ⋮ → „App installieren“.",
+    installDesktop:"Computer (Chrome/Edge): Klicken Sie auf das ⊕-/Installieren-Symbol in der Adressleiste oder Menü ⋮ → „Smart Logistics installieren“.",
     okBtn:"OK", saveBtn:"Speichern",
     invTitle:"Erweiterte Bestandsübersicht", addItemBtn:"+ Artikel hinzufügen", searchPh:"Artikel suchen (Ref. oder Name)…",
     statItems:"Artikel", statValue:"Lagerwert", statMargin:"Ø Marge", statLow:"Kritischer Bestand",
@@ -1149,42 +1154,57 @@ function toggleLang(){
 document.getElementById('langToggle').addEventListener('click', toggleLang);
 document.getElementById('langToggleApp').addEventListener('click', toggleLang);
 
-/* ---------- PWA: manifest + service worker + install prompt ---------- */
+/* ---------- PWA: static manifest.json + sw.js + install prompt ----------
+   IMPORTANT : manifest.json et sw.js sont désormais de VRAIS fichiers statiques
+   (à héberger à côté de index.html), et non plus générés en mémoire via Blob.
+   Les navigateurs sont beaucoup plus fiables pour détecter l'installabilité
+   ainsi — l'ancienne approche Blob faisait souvent échouer silencieusement les
+   critères d'installation (icônes/URLs mal résolues, service worker refusé). */
 (function setupPwa(){
-  const manifest = {
-    name: CONFIG.meta.appName, short_name: "SmartLog", start_url: ".", display: "standalone",
-    background_color: "#08090a", theme_color: "#08090a",
-    icons: [{ src:"./favicon-192.png", sizes:"192x192", type:"image/png" }]
-  };
-  try{
-    const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-    const link = document.createElement('link'); link.rel='manifest'; link.href = URL.createObjectURL(blob);
-    document.head.appendChild(link);
-  }catch(e){}
-  if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
-    try{
-      const swCode = `self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{});`;
-      const swUrl = URL.createObjectURL(new Blob([swCode], {type:'application/javascript'}));
-      navigator.serviceWorker.register(swUrl).catch(()=>{});
-    }catch(e){}
-  }
-  let deferredPrompt = null;
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isSecure = location.protocol==='https:' || location.hostname==='localhost';
+
+  if(isStandalone){
+    document.getElementById('installBtnLock').classList.add('hidden-imp');
+    document.getElementById('installBtnApp').classList.add('hidden-imp');
+    return;
+  }
+
+  if('serviceWorker' in navigator && isSecure){
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  }
+
+  let deferredPrompt = null;
   window.addEventListener('beforeinstallprompt', e=>{
-    e.preventDefault(); deferredPrompt = e;
-    if(!isStandalone){ document.getElementById('installBtnLock').classList.remove('hidden-imp'); document.getElementById('installBtnApp').classList.remove('hidden-imp'); }
+    e.preventDefault();
+    deferredPrompt = e;
   });
+  window.addEventListener('appinstalled', ()=>{
+    document.getElementById('installBtnLock').classList.add('hidden-imp');
+    document.getElementById('installBtnApp').classList.add('hidden-imp');
+  });
+
   function handleInstallClick(){
-    if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.finally(()=>deferredPrompt=null); }
-    else { const modal=document.getElementById('installModal'); modal.classList.remove('hidden-imp'); modal.classList.add('flex'); }
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.finally(()=>{ deferredPrompt = null; });
+      return;
+    }
+    // Fallback: native prompt not available (iOS, unsupported browser, criteria
+    // not yet met, or already dismissed once) — show manual instructions instead.
+    const modal = document.getElementById('installModal');
+    modal.classList.remove('hidden-imp'); modal.classList.add('flex');
   }
   document.getElementById('installBtnLock').addEventListener('click', handleInstallClick);
   document.getElementById('installBtnApp').addEventListener('click', handleInstallClick);
   document.getElementById('closeInstallModal').addEventListener('click', ()=>{
     const modal=document.getElementById('installModal'); modal.classList.add('hidden-imp'); modal.classList.remove('flex');
   });
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  if(isIOS && !isStandalone){ document.getElementById('installBtnLock').classList.remove('hidden-imp'); document.getElementById('installBtnApp').classList.remove('hidden-imp'); }
+
+  if(!isSecure){
+    console.warn('Smart Logistics: installation PWA indisponible — la page doit être servie en HTTPS (ou localhost), pas en file://.');
+  }
 })();
 
 /* ---------- CONFIG LOADING (offline-first: defaults first, then try remote) ---------- */
