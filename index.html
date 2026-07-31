@@ -4,38 +4,68 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <title>Smart Logistics — WMS Offline</title>
-<meta name="theme-color" content="#0a0a0c">
-<link id="manifestLink" rel="manifest">
+<meta name="theme-color" content="#08090a">
+
+<!-- ============ SOCIAL SHARE PREVIEW (Open Graph / Twitter) ============
+     IMPORTANT : ces balises sont statiques (les robots de partage n'exécutent
+     pas le JavaScript). Si vous changez le nom/description/logo depuis admin.html,
+     pensez à modifier aussi ce bloc + à remplacer le fichier logo.png sur
+     GitHub (une image data:// ne fonctionne PAS pour les aperçus WhatsApp/FB). -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Smart Logistics — Système de Gestion d'Entrepôt">
+<meta property="og:description" content="Application WMS professionnelle, offline-first, bilingue FR/DE. Inventaire, placement d'entrepôt, rapports.">
+<meta property="og:image" content="./logo.png">
+<meta property="og:url" content="">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Smart Logistics — Système de Gestion d'Entrepôt">
+<meta name="twitter:description" content="Application WMS professionnelle, offline-first, bilingue FR/DE.">
+<meta name="twitter:image" content="./logo.png">
+
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACN0lEQVR4nO2XP2gTYRiHn/suaXK5i7WJgsSCOAhWwUXoUv+g1UXUoehQsKBgdZMq1UlBHAVpnQRxEBxtQLoURJSOhroU2sGhQymlQtPG9swlqblzkMj1csnF3p3t4G86vnt5f8/3fS937yvhoriSsNzW/apkFCXn2qYFu3H+VSZQ8/TNRVeQPw8186CNG4HUIKRG5nbiIOSWu2QUJdEsIEjZc9q9hLPgwjBvlDuuJCxhJwrT3AlR8xTNgv+F/gNEvAJkAYO9KtdOqBzYIxORoVix+FYweTy2xvvpEgBv76Y5ezTGim5yaGgpOIDhi0keXE7yaabMlZE8esnkcCZKf49Ce6Luy/rX8gTo70kA8HGmzFKhCsDUXIWpuYpv85YAOtTfZTJ0QaMtApOzZabnN6iagfh7F+HkbBmAtCZ41LeLDw/38nV0H88G2klp/mvYM8O9NwXGvxj8tO14d0Jw/bTKy8EO3wCeV7C8bnLjxSop7TtnjsQ4fyxOX7eCLOBUV4yoLLFR3Xr74AlQ04puks0ZZHMGqz9MbvWq6CXTlzm0cAXvhtPcPqfStT+C0ibRmZI5fjAKwNhnw5c5tHAC88tVBk6q3L+URItLWBYs5KuMTug8HV+vi09poq6peT6h8yS7tjWAO68LXiEAXB3JtxTn1Lb/C7YdwPMKMrkFXwaL3Z1N3+/8E/DagV8JqO/TwpSz/xTOcSlMCGfuTXNBo749DHO7184YzZwQYYB4DqeNQIKU23j+C9bq0ERLBXcvAAAAAElFTkSuQmCC">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        base: { 950:'#08090a', 900:'#0f1113', 850:'#14171a', 800:'#1b1f23', 700:'#262b30', 600:'#3a4147' },
-        amber: { DEFAULT:'#f5a524' },
-        neon: '#22d3ee'
-      },
-      fontFamily: { mono: ['ui-monospace','Menlo','monospace'], sans: ['Inter','ui-sans-serif','system-ui'] }
-    }
-  }
-}
+tailwind.config = { theme: { extend: { colors: { base: { 950:'#08090a',900:'#0f1113',850:'#14171a',800:'#1b1f23',700:'#262b30',600:'#3a4147' } } } } }
 </script>
 <style>
+  :root{ --c-primary:#f5a524; --c-accent:#22d3ee; --c-bg:#08090a; --font-main:'Inter',ui-sans-serif,system-ui; }
   * { -webkit-tap-highlight-color: transparent; }
-  body { background: radial-gradient(circle at 20% -10%, #14262b 0%, #08090a 45%) fixed; }
-  ::-webkit-scrollbar { width: 8px; height:8px; }
-  ::-webkit-scrollbar-thumb { background:#2a3136; border-radius:4px; }
-  .grid-cell { transition: all .15s ease; }
-  .grid-cell.suggested { background: #22d3ee !important; color:#08090a; box-shadow: 0 0 18px rgba(34,211,238,.7); transform: scale(1.08); z-index:5; }
-  .fade-in { animation: fadeIn .25s ease; }
-  @keyframes fadeIn { from { opacity:0; transform: translateY(6px);} to {opacity:1; transform:none;} }
-  .stripes { background-image: repeating-linear-gradient(135deg, rgba(245,165,36,.12) 0 10px, transparent 10px 20px); }
-  input[type=text], input[type=number], select { color-scheme: dark; }
-  .hidden-imp { display:none !important; }
+  html.light{ --c-bg:#f4f5f7; }
+  body{ background: radial-gradient(circle at 20% -10%, color-mix(in srgb, var(--c-primary) 8%, transparent) 0%, var(--c-bg) 45%) fixed; font-family: var(--font-main); }
+  html.light body{ background: radial-gradient(circle at 20% -10%, #eef0f3 0%, #f4f5f7 45%) fixed; color:#16181b; }
+  html.light .bg-base-950{ background:#f4f5f7 !important; }
+  html.light .bg-base-900{ background:#ffffff !important; }
+  html.light .bg-base-800{ background:#eceef1 !important; }
+  html.light .border-base-700, html.light .border-base-800{ border-color:#d7dbe0 !important; }
+  html.light .text-zinc-200, html.light .text-white{ color:#16181b !important; }
+  html.light .text-zinc-400, html.light .text-zinc-500{ color:#5b6169 !important; }
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-thumb{ background:#2a3136; border-radius:4px; }
+  .grid-cell{ transition: all .15s ease; }
+  .grid-cell.suggested{ background: var(--c-accent) !important; color:#08090a; box-shadow: 0 0 18px color-mix(in srgb, var(--c-accent) 70%, transparent); transform: scale(1.08); z-index:5; }
+  .fade-in{ animation: fadeIn .25s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform: translateY(6px);} to{opacity:1; transform:none;} }
+  .stripes{ background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 12%, transparent) 0 10px, transparent 10px 20px); }
+  input,select,textarea{ color-scheme: dark; }
+  html.light input, html.light select, html.light textarea{ color-scheme: light; }
+  .hidden-imp{ display:none !important; }
+  .accent-bg{ background: var(--c-primary); color:#08090a; }
+  .accent-text{ color: var(--c-primary); }
+  .neon-text{ color: var(--c-accent); }
+  .neon-border{ border-color: var(--c-accent); }
+  .fab{ box-shadow: 0 6px 20px rgba(0,0,0,.4); }
 </style>
 </head>
-<body class="min-h-screen bg-base-950 text-zinc-200 font-sans antialiased selection:bg-neon selection:text-black">
+<body class="min-h-screen bg-base-950 text-zinc-200 antialiased">
+
+<!-- ===================== BANNED SCREEN ===================== -->
+<div id="bannedScreen" class="fixed inset-0 z-[1200] hidden-imp items-center justify-center bg-black/95 p-4">
+  <div class="max-w-sm text-center">
+    <p class="text-4xl mb-3">⛔</p>
+    <p class="text-white font-bold text-lg mb-1" data-i18n="bannedTitle">Accès désactivé</p>
+    <p class="text-zinc-500 text-sm" data-i18n="bannedDesc">Cet appareil n'est plus autorisé à utiliser Smart Logistics. Contactez l'administrateur.</p>
+  </div>
+</div>
 
 <!-- ===================== LOCK / PAYWALL SCREEN ===================== -->
 <div id="paywallScreen" class="fixed inset-0 z-[999] overflow-y-auto hidden-imp">
@@ -44,132 +74,136 @@ tailwind.config = {
 
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-lg bg-base-900 border border-amber flex items-center justify-center text-amber font-black text-xl">SL</div>
+          <img id="logoImgLock" src="./logo.png" class="w-11 h-11 rounded-lg border border-base-700 object-cover" onerror="this.style.display='none'">
           <div>
-            <h1 class="text-lg font-bold tracking-tight text-white">Smart Logistics</h1>
-            <p class="text-[11px] text-zinc-500 font-mono" data-i18n="tag">Warehouse Management System</p>
+            <h1 id="appNameLock" class="text-lg font-bold tracking-tight text-white">Smart Logistics</h1>
+            <p id="appSubtitleLock" class="text-[11px] text-zinc-500 font-mono">Warehouse Management System</p>
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button id="installBtnLock" class="hidden-imp text-xs px-3 py-2 rounded-md border border-neon text-neon font-semibold hover:bg-neon hover:text-black transition" data-i18n="installBtn">Installer l'app</button>
-          <button id="langToggle" class="text-xs font-mono px-3 py-2 rounded-md border border-base-700 hover:border-amber transition">FR / DE</button>
+          <button id="installBtnLock" class="hidden-imp text-xs px-3 py-2 rounded-md border neon-border neon-text font-semibold hover:brightness-125 transition" data-i18n="installBtn">Installer l'app</button>
+          <button id="langToggle" class="text-xs font-mono px-3 py-2 rounded-md border border-base-700 hover:accent-text transition">FR / DE</button>
         </div>
       </div>
 
-      <div id="trialStatusBox" class="mb-5 p-3 rounded-lg border border-base-700 bg-base-900/80 text-sm hidden-imp"></div>
+      <div id="trialStatusBox" class="mb-5 p-3 rounded-lg border border-base-700 bg-base-900/80 text-sm hidden-imp">
+        <p id="trialStatusText"></p>
+        <p id="trialCountdown" class="font-mono text-lg accent-text mt-1"></p>
+      </div>
 
       <div id="lockedMsgBox" class="mb-5 p-4 rounded-lg border border-red-500/50 bg-red-950/40 text-red-300 text-sm hidden-imp">
         <p class="font-bold" data-i18n="lockedTitle">🔒 Période d'essai expirée</p>
-        <p data-i18n="lockedDesc">Votre essai gratuit de 7 jours est terminé. Entrez une clé de licence valide pour continuer.</p>
+        <p data-i18n="lockedDesc">Votre essai gratuit est terminé. Entrez une clé de licence valide pour continuer.</p>
       </div>
 
-      <!-- Device ID -->
       <div class="mb-5 p-4 rounded-lg border border-base-700 bg-base-900">
         <p class="text-[11px] uppercase tracking-widest text-zinc-500 mb-2" data-i18n="deviceIdLabel">Identifiant Machine (Device ID) — à nous transmettre</p>
         <div class="flex items-center gap-2 flex-wrap">
-          <code id="deviceIdDisplay" class="text-neon font-mono text-lg tracking-wider bg-base-950 px-3 py-2 rounded border border-base-700 flex-1 min-w-[220px] text-center"></code>
-          <button id="copyDeviceId" class="text-xs px-3 py-2.5 rounded border border-base-700 hover:border-amber transition" data-i18n="copyBtn">Copier</button>
+          <code id="deviceIdDisplay" class="neon-text font-mono text-lg tracking-wider bg-base-950 px-3 py-2 rounded border border-base-700 flex-1 min-w-[220px] text-center"></code>
+          <button id="copyDeviceId" class="text-xs px-3 py-2.5 rounded border border-base-700 hover:accent-text transition" data-i18n="copyBtn">Copier</button>
         </div>
       </div>
 
-      <!-- Key input -->
       <div class="mb-6 p-4 rounded-lg border border-base-700 bg-base-900">
         <p class="text-[11px] uppercase tracking-widest text-zinc-500 mb-2" data-i18n="keyLabel">Clé de licence</p>
         <div class="flex items-center gap-2 flex-wrap">
-          <input id="licenseKeyInput" type="text" placeholder="SL-XXX-XXXX-XXXX" class="flex-1 min-w-[220px] bg-base-950 border border-base-700 focus:border-amber outline-none rounded px-3 py-2.5 font-mono tracking-widest text-center uppercase">
-          <button id="validateKeyBtn" class="px-4 py-2.5 rounded bg-amber text-black font-bold hover:brightness-110 transition" data-i18n="unlockBtn">Débloquer</button>
+          <input id="licenseKeyInput" type="text" placeholder="SL-XXX-XXXX-XXXX" autocomplete="off" class="flex-1 min-w-[220px] bg-base-950 border border-base-700 focus:accent-text outline-none rounded px-3 py-2.5 font-mono tracking-widest text-center uppercase">
+          <button id="validateKeyBtn" class="px-4 py-2.5 rounded accent-bg font-bold hover:brightness-110 transition" data-i18n="unlockBtn">Débloquer</button>
         </div>
         <p id="keyMsg" class="mt-2 text-sm"></p>
       </div>
 
-      <!-- Pricing grid -->
       <p class="text-sm font-bold text-zinc-300 mb-3" data-i18n="pricingTitle">Grille tarifaire officielle</p>
       <div id="pricingGrid" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8"></div>
 
-      <div class="text-center text-xs text-zinc-600 pb-8" data-i18n="footerNote">© 2026 Smart Logistics — Système offline-first. Toute clé est liée à cet appareil.</div>
+      <div class="border-t border-base-800 pt-6 pb-4 text-center">
+        <p class="text-xs text-zinc-500 mb-3" data-i18n="contactUsDirect">Une question avant d'acheter ? Contactez-nous directement :</p>
+        <div id="footerContactBtns" class="flex items-center justify-center gap-3 flex-wrap"></div>
+        <p id="footerPowered" class="text-[11px] text-zinc-600 mt-6">Powered by EMPIRE CODE</p>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ===================== CONTACT MODAL ===================== -->
+<!-- ===================== CONTACT MODAL (plan purchase) ===================== -->
 <div id="contactModal" class="fixed inset-0 z-[1000] hidden-imp items-center justify-center bg-black/70 p-4">
   <div class="bg-base-900 border border-base-700 rounded-xl max-w-sm w-full p-5 fade-in">
     <p class="text-xs text-zinc-500 mb-1" data-i18n="chosenPlan">Plan sélectionné</p>
     <p id="contactPlanName" class="text-lg font-bold text-white mb-1"></p>
-    <p id="contactPlanPrice" class="text-amber font-mono mb-4"></p>
+    <p id="contactPlanPrice" class="accent-text font-mono mb-4"></p>
     <p class="text-xs text-zinc-500 mb-3" data-i18n="chooseChannel">Choisissez un canal pour envoyer votre demande (Plan + Device ID inclus) :</p>
-    <div class="flex flex-col gap-2">
-      <a id="waLink1" target="_blank" class="block text-center px-4 py-2.5 rounded bg-green-600 hover:bg-green-500 font-semibold text-white transition">WhatsApp (+229 01 96 80 91 06)</a>
-      <a id="waLink2" target="_blank" class="block text-center px-4 py-2.5 rounded bg-green-700 hover:bg-green-600 font-semibold text-white transition">WhatsApp (+229 01 49 10 57 85)</a>
-      <a id="mailLink" target="_blank" class="block text-center px-4 py-2.5 rounded bg-blue-600 hover:bg-blue-500 font-semibold text-white transition" data-i18n="emailBtn">Email</a>
-    </div>
+    <div id="contactModalBtns" class="flex flex-col gap-2"></div>
     <button id="closeContactModal" class="mt-4 w-full text-xs text-zinc-500 hover:text-zinc-300" data-i18n="cancelBtn">Annuler</button>
   </div>
 </div>
 
-<!-- ===================== INSTALL INSTRUCTIONS MODAL (iOS) ===================== -->
+<!-- ===================== INSTALL INSTRUCTIONS MODAL ===================== -->
 <div id="installModal" class="fixed inset-0 z-[1000] hidden-imp items-center justify-center bg-black/70 p-4">
   <div class="bg-base-900 border border-base-700 rounded-xl max-w-sm w-full p-5 fade-in text-sm">
     <p class="font-bold text-white mb-2" data-i18n="installTitle">Installer Smart Logistics</p>
     <p class="text-zinc-400 mb-2" data-i18n="installIOS">iOS / Safari : appuyez sur l'icône Partager, puis « Sur l'écran d'accueil ».</p>
     <p class="text-zinc-400 mb-4" data-i18n="installAndroid">Android / Chrome : utilisez le bouton « Installer » ou le menu ⋮ → « Installer l'application ».</p>
-    <button id="closeInstallModal" class="w-full text-center px-4 py-2.5 rounded bg-amber text-black font-bold" data-i18n="okBtn">OK</button>
+    <button id="closeInstallModal" class="w-full text-center px-4 py-2.5 rounded accent-bg font-bold" data-i18n="okBtn">OK</button>
+  </div>
+</div>
+
+<!-- ===================== GENERIC CRUD MODAL ===================== -->
+<div id="genModal" class="fixed inset-0 z-[1000] hidden-imp items-center justify-center bg-black/70 p-4">
+  <div class="bg-base-900 border border-base-700 rounded-xl max-w-md w-full p-5 fade-in">
+    <p id="genModalTitle" class="font-bold text-white mb-3"></p>
+    <div id="genModalBody" class="grid grid-cols-2 gap-3 text-sm"></div>
+    <div class="flex gap-2 mt-4">
+      <button id="genModalSave" class="flex-1 px-4 py-2.5 rounded accent-bg font-bold" data-i18n="saveBtn">Enregistrer</button>
+      <button id="genModalClose" class="px-4 py-2.5 rounded border border-base-700 text-zinc-400" data-i18n="cancelBtn">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LABEL / QR MODAL ===================== -->
+<div id="labelModal" class="fixed inset-0 z-[1000] hidden-imp items-center justify-center bg-black/70 p-4">
+  <div class="bg-white text-black rounded-xl max-w-xs w-full p-5 fade-in text-center">
+    <canvas id="labelCanvas" width="240" height="120" class="mx-auto border border-zinc-300 rounded"></canvas>
+    <p id="labelRef" class="font-mono font-bold mt-2"></p>
+    <p id="labelName" class="text-xs text-zinc-600"></p>
+    <button id="closeLabelModal" class="mt-4 w-full text-center px-4 py-2.5 rounded bg-zinc-800 text-white font-bold" data-i18n="okBtn">OK</button>
   </div>
 </div>
 
 <!-- ===================== MAIN APP ===================== -->
-<div id="app" class="hidden-imp">
+<div id="app" class="hidden-imp pb-20">
   <header class="sticky top-0 z-40 bg-base-950/90 backdrop-blur border-b border-base-800">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex items-center justify-between gap-2 flex-wrap">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-base-900 border border-amber flex items-center justify-center text-amber font-black">SL</div>
+        <img id="logoImgApp" src="./logo.png" class="w-9 h-9 rounded-lg border border-base-700 object-cover" onerror="this.style.display='none'">
         <div>
-          <h1 class="text-sm font-bold text-white leading-tight">Smart Logistics</h1>
+          <h1 id="appNameApp" class="text-sm font-bold text-white leading-tight">Smart Logistics</h1>
           <p class="text-[10px] text-zinc-500 font-mono" id="licenseStatusMini"></p>
         </div>
       </div>
-      <nav id="tabsNav" class="flex gap-1 flex-wrap text-xs font-semibold">
-        <button data-tab="inv" class="tab-btn px-3 py-2 rounded-md bg-base-900 border border-base-700" data-i18n="tabInventory">Inventaire</button>
-        <button data-tab="wh" class="tab-btn px-3 py-2 rounded-md bg-base-900 border border-base-700" data-i18n="tabWarehouse">Entrepôt</button>
-        <button data-tab="rep" class="tab-btn px-3 py-2 rounded-md bg-base-900 border border-base-700" data-i18n="tabReport">Rapport</button>
-        <button data-tab="arch" class="tab-btn px-3 py-2 rounded-md bg-base-900 border border-base-700" data-i18n="tabArch">Architecture</button>
-      </nav>
+      <nav id="tabsNav" class="flex gap-1 flex-wrap text-xs font-semibold"></nav>
       <div class="flex items-center gap-2">
-        <button id="installBtnApp" class="hidden-imp text-xs px-3 py-2 rounded-md border border-neon text-neon font-semibold hover:bg-neon hover:text-black transition" data-i18n="installBtn">Installer l'app</button>
-        <button id="langToggleApp" class="text-xs font-mono px-3 py-2 rounded-md border border-base-700 hover:border-amber transition">FR/DE</button>
+        <button id="installBtnApp" class="hidden-imp text-xs px-3 py-2 rounded-md border neon-border neon-text font-semibold hover:brightness-125 transition" data-i18n="installBtn">Installer l'app</button>
+        <button id="langToggleApp" class="text-xs font-mono px-3 py-2 rounded-md border border-base-700">FR/DE</button>
       </div>
     </div>
-    <div id="trialBanner" class="hidden-imp bg-amber/10 border-t border-amber/30 text-amber text-xs text-center py-1.5 font-semibold"></div>
+    <div id="trialBanner" class="hidden-imp accent-bg text-xs text-center py-1.5 font-semibold"></div>
   </header>
 
   <main class="max-w-7xl mx-auto px-3 sm:px-6 py-6">
 
-    <!-- INVENTORY TAB -->
+    <!-- INVENTORY -->
     <section id="tab-inv" class="tab-panel">
       <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
         <h2 class="text-lg font-bold text-white" data-i18n="invTitle">Tableau d'Inventaire Avancé</h2>
-        <button id="addItemBtn" class="px-3 py-2 rounded-md bg-amber text-black text-sm font-bold" data-i18n="addItemBtn">+ Ajouter article</button>
+        <button id="addItemBtn" class="px-3 py-2 rounded-md accent-bg text-sm font-bold" data-i18n="addItemBtn">+ Ajouter article</button>
       </div>
-
+      <input id="invSearch" type="text" placeholder="🔍" data-i18n-ph="searchPh" class="w-full mb-4 bg-base-900 border border-base-700 rounded px-3 py-2 outline-none focus:accent-text">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-        <div class="p-3 rounded-lg border border-base-700 bg-base-900">
-          <p class="text-[10px] text-zinc-500 uppercase" data-i18n="statItems">Articles</p>
-          <p id="statItems" class="text-xl font-bold text-white">0</p>
-        </div>
-        <div class="p-3 rounded-lg border border-base-700 bg-base-900">
-          <p class="text-[10px] text-zinc-500 uppercase" data-i18n="statValue">Valeur stock</p>
-          <p id="statValue" class="text-xl font-bold text-neon">0</p>
-        </div>
-        <div class="p-3 rounded-lg border border-base-700 bg-base-900">
-          <p class="text-[10px] text-zinc-500 uppercase" data-i18n="statMargin">Marge moy.</p>
-          <p id="statMargin" class="text-xl font-bold text-green-400">0%</p>
-        </div>
-        <div class="p-3 rounded-lg border border-red-500/40 bg-red-950/30">
-          <p class="text-[10px] text-red-400 uppercase" data-i18n="statLow">Stock critique</p>
-          <p id="statLow" class="text-xl font-bold text-red-400">0</p>
-        </div>
+        <div class="p-3 rounded-lg border border-base-700 bg-base-900"><p class="text-[10px] text-zinc-500 uppercase" data-i18n="statItems">Articles</p><p id="statItems" class="text-xl font-bold text-white">0</p></div>
+        <div class="p-3 rounded-lg border border-base-700 bg-base-900"><p class="text-[10px] text-zinc-500 uppercase" data-i18n="statValue">Valeur stock</p><p id="statValue" class="text-xl font-bold neon-text">0</p></div>
+        <div class="p-3 rounded-lg border border-base-700 bg-base-900"><p class="text-[10px] text-zinc-500 uppercase" data-i18n="statMargin">Marge moy.</p><p id="statMargin" class="text-xl font-bold text-green-400">0%</p></div>
+        <div class="p-3 rounded-lg border border-red-500/40 bg-red-950/30"><p class="text-[10px] text-red-400 uppercase" data-i18n="statLow">Stock critique</p><p id="statLow" class="text-xl font-bold text-red-400">0</p></div>
       </div>
-
       <div class="overflow-x-auto rounded-lg border border-base-700">
         <table class="w-full text-sm">
           <thead class="bg-base-900 text-zinc-400 text-xs uppercase">
@@ -189,246 +223,432 @@ tailwind.config = {
       </div>
     </section>
 
-    <!-- WAREHOUSE TAB -->
+    <!-- MOVEMENTS -->
+    <section id="tab-mov" class="tab-panel hidden-imp">
+      <h2 class="text-lg font-bold text-white mb-4" data-i18n="movTitle">Mouvements de Stock</h2>
+      <div class="grid lg:grid-cols-[300px_1fr] gap-5">
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900 h-fit">
+          <p class="text-[11px] uppercase text-zinc-500 mb-1" data-i18n="movItem">Article</p>
+          <select id="movItemSelect" class="w-full bg-base-950 border border-base-700 rounded px-3 py-2 mb-3"></select>
+          <p class="text-[11px] uppercase text-zinc-500 mb-1" data-i18n="movType">Type</p>
+          <select id="movType" class="w-full bg-base-950 border border-base-700 rounded px-3 py-2 mb-3">
+            <option value="IN" data-i18n="movIn">Entrée</option>
+            <option value="OUT" data-i18n="movOut">Sortie</option>
+          </select>
+          <p class="text-[11px] uppercase text-zinc-500 mb-1" data-i18n="movQty">Quantité</p>
+          <input id="movQty" type="number" min="1" value="1" class="w-full bg-base-950 border border-base-700 rounded px-3 py-2 mb-3">
+          <p class="text-[11px] uppercase text-zinc-500 mb-1" data-i18n="movReason">Motif</p>
+          <input id="movReason" type="text" class="w-full bg-base-950 border border-base-700 rounded px-3 py-2 mb-4">
+          <button id="movSaveBtn" class="w-full px-4 py-2.5 rounded accent-bg font-bold" data-i18n="movSaveBtn">Enregistrer le mouvement</button>
+        </div>
+        <div class="overflow-x-auto rounded-lg border border-base-700 h-fit">
+          <table class="w-full text-sm">
+            <thead class="bg-base-900 text-zinc-400 text-xs uppercase"><tr>
+              <th class="text-left px-3 py-2" data-i18n="colDate">Date</th>
+              <th class="text-left px-3 py-2" data-i18n="colRef">Réf.</th>
+              <th class="text-center px-3 py-2" data-i18n="movType">Type</th>
+              <th class="text-right px-3 py-2" data-i18n="movQty">Quantité</th>
+              <th class="text-left px-3 py-2" data-i18n="movReason">Motif</th>
+            </tr></thead>
+            <tbody id="movTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUPPLIERS -->
+    <section id="tab-sup" class="tab-panel hidden-imp">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <h2 class="text-lg font-bold text-white" data-i18n="supTitle">Fournisseurs</h2>
+        <button id="addSupBtn" class="px-3 py-2 rounded-md accent-bg text-sm font-bold" data-i18n="addSupBtn">+ Ajouter fournisseur</button>
+      </div>
+      <div id="supList" class="grid md:grid-cols-2 gap-3"></div>
+    </section>
+
+    <!-- WAREHOUSE -->
     <section id="tab-wh" class="tab-panel hidden-imp">
       <h2 class="text-lg font-bold text-white mb-1" data-i18n="whTitle">Placement de Colis — Zero Communication</h2>
       <p class="text-xs text-zinc-500 mb-4" data-i18n="whDesc">Scannez le colis : la case optimale de l'entrepôt s'illumine automatiquement.</p>
-
       <div class="grid lg:grid-cols-[320px_1fr] gap-5">
         <div class="p-4 rounded-lg border border-base-700 bg-base-900 h-fit">
           <p class="text-[11px] uppercase text-zinc-500 mb-1" data-i18n="scanWeight">Poids du colis (kg)</p>
-          <input id="scanWeight" type="number" min="0" step="0.1" value="5" class="w-full bg-base-950 border border-base-700 rounded px-3 py-2 mb-3 outline-none focus:border-amber">
+          <input id="scanWeight" type="number" min="0" step="0.1" value="5" class="w-full bg-base-950 border border-base-700 rounded px-3 py-2 mb-3">
           <p class="text-[11px] uppercase text-zinc-500 mb-1" data-i18n="scanAbc">Catégorie de rotation ABC</p>
-          <select id="scanAbc" class="w-full bg-base-950 border border-base-700 rounded px-3 py-2 mb-4 outline-none focus:border-amber">
+          <select id="scanAbc" class="w-full bg-base-950 border border-base-700 rounded px-3 py-2 mb-4">
             <option value="A" data-i18n="abcA">A — Rotation rapide</option>
             <option value="B" data-i18n="abcB">B — Rotation moyenne</option>
             <option value="C" data-i18n="abcC">C — Rotation lente</option>
           </select>
-          <button id="scanBtn" class="w-full px-4 py-2.5 rounded bg-neon text-black font-bold" data-i18n="scanBtn">Calculer l'emplacement</button>
+          <button id="scanBtn" class="w-full px-4 py-2.5 rounded accent-bg font-bold" data-i18n="scanBtn">Calculer l'emplacement</button>
           <div id="scanResult" class="mt-4 text-sm p-3 rounded border border-base-700 bg-base-950 hidden-imp"></div>
         </div>
         <div class="p-4 rounded-lg border border-base-700 bg-base-900 overflow-x-auto">
           <div id="warehouseGrid" class="inline-grid gap-1.5"></div>
           <div class="flex gap-4 mt-4 text-[11px] text-zinc-500 flex-wrap">
             <span><span class="inline-block w-3 h-3 rounded bg-base-700 mr-1 align-middle"></span><span data-i18n="legendFree">Emplacement libre</span></span>
-            <span><span class="inline-block w-3 h-3 rounded bg-neon mr-1 align-middle"></span><span data-i18n="legendSuggested">Emplacement suggéré</span></span>
+            <span><span class="inline-block w-3 h-3 rounded accent-bg mr-1 align-middle"></span><span data-i18n="legendSuggested">Emplacement suggéré</span></span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- REPORT TAB -->
+    <!-- TASKS -->
+    <section id="tab-task" class="tab-panel hidden-imp">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <h2 class="text-lg font-bold text-white" data-i18n="taskTitle">Tâches &amp; Rappels</h2>
+        <button id="addTaskBtn" class="px-3 py-2 rounded-md accent-bg text-sm font-bold" data-i18n="addTaskBtn">+ Ajouter tâche</button>
+      </div>
+      <div id="taskList" class="space-y-2"></div>
+    </section>
+
+    <!-- REPORT -->
     <section id="tab-rep" class="tab-panel hidden-imp">
       <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
         <h2 class="text-lg font-bold text-white" data-i18n="repTitle">Rapport d'Activité Logistique</h2>
-        <button id="exportCsvBtn" class="px-3 py-2 rounded-md border border-base-700 hover:border-amber text-sm font-semibold" data-i18n="exportBtn">⬇ Exporter CSV</button>
+        <button id="exportCsvBtn" class="px-3 py-2 rounded-md border border-base-700 hover:accent-text text-sm font-semibold" data-i18n="exportBtn">⬇ Exporter CSV</button>
       </div>
-      <div id="reportBody" class="grid md:grid-cols-2 gap-4"></div>
+      <div id="reportBody" class="grid md:grid-cols-2 gap-4 mb-6"></div>
+      <p class="text-sm font-bold text-zinc-300 mb-2" data-i18n="reorderTitle">⚠ Suggestions de réapprovisionnement</p>
+      <div id="reorderBody" class="overflow-x-auto rounded-lg border border-base-700 mb-6"></div>
+      <p class="text-sm font-bold text-zinc-300 mb-2" data-i18n="chartTitle">Valeur du stock par catégorie ABC</p>
+      <div id="chartBody" class="space-y-2"></div>
     </section>
 
-    <!-- ARCHITECTURE TAB -->
+    <!-- ARCHITECTURE -->
     <section id="tab-arch" class="tab-panel hidden-imp">
       <h2 class="text-lg font-bold text-white mb-1" data-i18n="archTitle">Architecture Technique</h2>
       <p class="text-xs text-zinc-500 mb-4" data-i18n="archDesc">Diagramme conceptuel — infrastructure cible pour un déploiement futur en réseau.</p>
       <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900"><p class="accent-text font-bold mb-2">☁️ AWS Multi-Region</p><p class="text-sm text-zinc-400" data-i18n="archAws">Réplication planifiée entre entrepôts, synchronisation asynchrone et sauvegardes S3 chiffrées (roadmap).</p></div>
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900"><p class="neon-text font-bold mb-2">🔗 Web3 Gateway</p><p class="text-sm text-zinc-400" data-i18n="archWeb3">Passerelle vers registre distribué pour la traçabilité des mouvements de stock (concept).</p></div>
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900"><p class="text-green-400 font-bold mb-2">🔒 Offline-First</p><p class="text-sm text-zinc-400" data-i18n="archOffline">Toutes les données actuelles sont stockées localement : fonctionnement garanti sans connexion.</p></div>
+        <div class="p-4 rounded-lg border border-base-700 bg-base-900"><p class="text-white font-bold mb-2">📡 PWA</p><p class="text-sm text-zinc-400" data-i18n="archPwa">Application installable sur écran d'accueil (mobile, tablette, ordinateur).</p></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="tab-set" class="tab-panel hidden-imp">
+      <h2 class="text-lg font-bold text-white mb-4" data-i18n="setTitle">Paramètres</h2>
+      <div class="grid md:grid-cols-2 gap-4">
         <div class="p-4 rounded-lg border border-base-700 bg-base-900">
-          <p class="text-amber font-bold mb-2">☁️ AWS Multi-Region</p>
-          <p class="text-sm text-zinc-400" data-i18n="archAws">Réplication planifiée entre entrepôts, synchronisation asynchrone et sauvegardes S3 chiffrées (roadmap).</p>
+          <p class="font-bold text-white mb-2" data-i18n="setTheme">Affichage</p>
+          <button id="themeToggleBtn" class="px-3 py-2 rounded border border-base-700 text-sm" data-i18n="toggleLight">🌗 Basculer clair / sombre</button>
         </div>
         <div class="p-4 rounded-lg border border-base-700 bg-base-900">
-          <p class="text-neon font-bold mb-2">🔗 Web3 Gateway</p>
-          <p class="text-sm text-zinc-400" data-i18n="archWeb3">Passerelle vers registre distribué pour la traçabilité des mouvements de stock (concept).</p>
+          <p class="font-bold text-white mb-2" data-i18n="setRole">Rôle utilisateur</p>
+          <p class="text-xs text-zinc-500 mb-2" id="roleStatus"></p>
+          <button id="roleToggleBtn" class="px-3 py-2 rounded border border-base-700 text-sm" data-i18n="setRoleToggle">Changer de rôle (PIN)</button>
         </div>
         <div class="p-4 rounded-lg border border-base-700 bg-base-900">
-          <p class="text-green-400 font-bold mb-2">🔒 Offline-First</p>
-          <p class="text-sm text-zinc-400" data-i18n="archOffline">Toutes les données actuelles sont stockées localement (LocalStorage) : fonctionnement garanti sans connexion.</p>
+          <p class="font-bold text-white mb-2" data-i18n="setBackup">Sauvegarde &amp; Restauration</p>
+          <div class="flex gap-2">
+            <button id="backupBtn" class="flex-1 px-3 py-2 rounded border border-base-700 text-sm" data-i18n="backupBtn">⬇ Exporter</button>
+            <label class="flex-1 px-3 py-2 rounded border border-base-700 text-sm text-center cursor-pointer" data-i18n="restoreBtn">⬆ Importer
+              <input id="restoreInput" type="file" accept="application/json" class="hidden-imp">
+            </label>
+          </div>
         </div>
         <div class="p-4 rounded-lg border border-base-700 bg-base-900">
-          <p class="text-white font-bold mb-2">📡 PWA</p>
-          <p class="text-sm text-zinc-400" data-i18n="archPwa">Application installable sur écran d'accueil (mobile, tablette, ordinateur).</p>
+          <p class="font-bold text-white mb-2" data-i18n="setAudit">Journal d'audit</p>
+          <div id="auditLog" class="text-xs text-zinc-500 max-h-40 overflow-y-auto space-y-1 font-mono"></div>
         </div>
       </div>
     </section>
   </main>
-</div>
 
-<!-- ===================== ADD ITEM MODAL ===================== -->
-<div id="itemModal" class="fixed inset-0 z-[1000] hidden-imp items-center justify-center bg-black/70 p-4">
-  <div class="bg-base-900 border border-base-700 rounded-xl max-w-md w-full p-5 fade-in">
-    <p class="font-bold text-white mb-3" data-i18n="itemModalTitle">Nouvel article</p>
-    <div class="grid grid-cols-2 gap-3 text-sm">
-      <input id="f_ref" placeholder="Réf." class="col-span-1 bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
-      <input id="f_name" placeholder="Désignation" class="col-span-1 bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
-      <select id="f_abc" class="bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
-      </select>
-      <input id="f_qty" type="number" placeholder="Qté" class="bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
-      <input id="f_threshold" type="number" placeholder="Seuil critique" class="bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
-      <input id="f_cost" type="number" placeholder="Prix revient" class="bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
-      <input id="f_sell" type="number" placeholder="Prix vente" class="col-span-2 bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:border-amber">
-    </div>
-    <div class="flex gap-2 mt-4">
-      <button id="saveItemBtn" class="flex-1 px-4 py-2.5 rounded bg-amber text-black font-bold" data-i18n="saveBtn">Enregistrer</button>
-      <button id="closeItemModal" class="px-4 py-2.5 rounded border border-base-700 text-zinc-400" data-i18n="cancelBtn">Annuler</button>
-    </div>
-  </div>
+  <div id="fabContacts" class="fixed bottom-4 right-4 z-30 flex flex-col gap-2 fab"></div>
 </div>
 
 <script>
 /* =========================================================================
-   SMART LOGISTICS — OFFLINE-FIRST WMS
-   Licensing engine: device-fingerprint anchored key validation (local only)
+   SMART LOGISTICS — OFFLINE-FIRST WMS (config-driven via data.json)
    ========================================================================= */
+
+const DATA_JSON_URL = "./data.json";
+
+const DEFAULT_CONFIG = {
+  meta: { appName:"Smart Logistics", logo:"./logo.png", subtitleFr:"Système de Gestion d'Entrepôt", subtitleDe:"Lagerverwaltungssystem", footerText:"Powered by EMPIRE CODE" },
+  theme: { primary:"#f5a524", accent:"#22d3ee", background:"#08090a", font:"Inter", boldTitles:true, italicSubtitles:false },
+  trial: { days:7 },
+  contacts: { whatsapp:[{number:"2290196809106",label:"WhatsApp"}], emails:["empiredonko@gmail.com"] },
+  pricing: [
+    {code:'M1',days:30,fr:'Mensuel (30 jours)',de:'Monatlich (30 Tage)',price:25500,enabled:true},
+    {code:'M2',days:60,fr:'Bimestriel (60 jours)',de:'Zweimonatlich (60 Tage)',price:45800,enabled:true},
+    {code:'M3',days:90,fr:'Trimestriel (90 jours)',de:'Vierteljährlich (90 Tage)',price:63800,enabled:true},
+    {code:'S1',days:180,fr:'Semestriel (180 jours)',de:'Halbjährlich (180 Tage)',price:115000,enabled:true},
+    {code:'A1',days:365,fr:'Annuel (365 jours)',de:'Jährlich (365 Tage)',price:190000,enabled:true},
+    {code:'A2',days:730,fr:'2 ans (730 jours)',de:'2 Jahre (730 Tage)',price:318000,enabled:true},
+    {code:'A3',days:1095,fr:'3 ans (1095 jours)',de:'3 Jahre (1095 Tage)',price:418000,enabled:true},
+    {code:'VIE',days:99999,fr:'À vie (Accès illimité)',de:'Lebenslang (Unbegrenzt)',price:950000,enabled:true}
+  ],
+  sections: [
+    {id:'inv',labelFr:'Inventaire',labelDe:'Inventar',enabled:true,order:1},
+    {id:'mov',labelFr:'Mouvements',labelDe:'Bewegungen',enabled:true,order:2},
+    {id:'sup',labelFr:'Fournisseurs',labelDe:'Lieferanten',enabled:true,order:3},
+    {id:'wh',labelFr:'Entrepôt',labelDe:'Lager',enabled:true,order:4},
+    {id:'task',labelFr:'Tâches',labelDe:'Aufgaben',enabled:true,order:5},
+    {id:'rep',labelFr:'Rapport',labelDe:'Bericht',enabled:true,order:6},
+    {id:'arch',labelFr:'Architecture',labelDe:'Architektur',enabled:true,order:7},
+    {id:'set',labelFr:'Paramètres',labelDe:'Einstellungen',enabled:true,order:8}
+  ],
+  licenses: { bannedDevices: [] }
+};
+let CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 
 /* ---------- i18n ---------- */
 const I18N = {
   fr: {
-    tag:"Système de Gestion d'Entrepôt", installBtn:"Installer l'app",
-    lockedTitle:"🔒 Période d'essai expirée", lockedDesc:"Votre essai gratuit de 7 jours est terminé. Entrez une clé de licence valide pour continuer.",
+    installBtn:"Installer l'app", lockedTitle:"🔒 Période d'essai expirée",
+    lockedDesc:"Votre essai gratuit est terminé. Entrez une clé de licence valide pour continuer.",
     deviceIdLabel:"Identifiant Machine (Device ID) — à nous transmettre", copyBtn:"Copier",
     keyLabel:"Clé de licence", unlockBtn:"Débloquer", pricingTitle:"Grille tarifaire officielle",
-    footerNote:"© 2026 Smart Logistics — Système offline-first. Toute clé est liée à cet appareil.",
+    contactUsDirect:"Une question avant d'acheter ? Contactez-nous directement :",
     chosenPlan:"Plan sélectionné", chooseChannel:"Choisissez un canal pour envoyer votre demande (Plan + Device ID inclus) :",
     emailBtn:"Email", cancelBtn:"Annuler", installTitle:"Installer Smart Logistics",
     installIOS:"iOS / Safari : appuyez sur l'icône Partager, puis « Sur l'écran d'accueil ».",
     installAndroid:"Android / Chrome : utilisez le bouton « Installer » ou le menu ⋮ → « Installer l'application ».",
-    okBtn:"OK", tabInventory:"Inventaire", tabWarehouse:"Entrepôt", tabReport:"Rapport", tabArch:"Architecture",
-    invTitle:"Tableau d'Inventaire Avancé", addItemBtn:"+ Ajouter article",
+    okBtn:"OK", saveBtn:"Enregistrer",
+    invTitle:"Tableau d'Inventaire Avancé", addItemBtn:"+ Ajouter article", searchPh:"Rechercher un article (réf. ou nom)…",
     statItems:"Articles", statValue:"Valeur stock", statMargin:"Marge moy.", statLow:"Stock critique",
-    colRef:"Réf.", colName:"Désignation", colABC:"ABC", colQty:"Qté", colCost:"Prix revient", colSell:"Prix vente", colMargin:"Marge",
+    colRef:"Réf.", colName:"Désignation", colABC:"ABC", colQty:"Qté", colCost:"Prix revient", colSell:"Prix vente", colMargin:"Marge", colDate:"Date",
+    movTitle:"Mouvements de Stock", movItem:"Article", movType:"Type", movIn:"Entrée", movOut:"Sortie", movQty:"Quantité", movReason:"Motif", movSaveBtn:"Enregistrer le mouvement",
+    supTitle:"Fournisseurs", addSupBtn:"+ Ajouter fournisseur",
     whTitle:"Placement de Colis — Zero Communication", whDesc:"Scannez le colis : la case optimale de l'entrepôt s'illumine automatiquement.",
     scanWeight:"Poids du colis (kg)", scanAbc:"Catégorie de rotation ABC",
     abcA:"A — Rotation rapide", abcB:"B — Rotation moyenne", abcC:"C — Rotation lente",
     scanBtn:"Calculer l'emplacement", legendFree:"Emplacement libre", legendSuggested:"Emplacement suggéré",
-    repTitle:"Rapport d'Activité Logistique", exportBtn:"⬇ Exporter CSV",
+    taskTitle:"Tâches & Rappels", addTaskBtn:"+ Ajouter tâche",
+    repTitle:"Rapport d'Activité Logistique", exportBtn:"⬇ Exporter CSV", reorderTitle:"⚠ Suggestions de réapprovisionnement", chartTitle:"Valeur du stock par catégorie ABC",
     archTitle:"Architecture Technique", archDesc:"Diagramme conceptuel — infrastructure cible pour un déploiement futur en réseau.",
     archAws:"Réplication planifiée entre entrepôts, synchronisation asynchrone et sauvegardes S3 chiffrées (roadmap).",
     archWeb3:"Passerelle vers registre distribué pour la traçabilité des mouvements de stock (concept).",
-    archOffline:"Toutes les données actuelles sont stockées localement (LocalStorage) : fonctionnement garanti sans connexion.",
+    archOffline:"Toutes les données actuelles sont stockées localement : fonctionnement garanti sans connexion.",
     archPwa:"Application installable sur écran d'accueil (mobile, tablette, ordinateur).",
-    itemModalTitle:"Nouvel article", saveBtn:"Enregistrer",
+    setTitle:"Paramètres", setTheme:"Affichage", toggleLight:"🌗 Basculer clair / sombre",
+    setRole:"Rôle utilisateur", setRoleToggle:"Changer de rôle (PIN)",
+    setBackup:"Sauvegarde & Restauration", backupBtn:"⬇ Exporter", restoreBtn:"⬆ Importer", setAudit:"Journal d'audit",
     trialDays: n => `Essai gratuit — ${n} jour(s) restant(s)`,
     licValid: exp => exp==='lifetime' ? 'Licence à vie — active' : `Licence active jusqu'au ${exp}`,
     invalidKey:"❌ Clé invalide pour cet appareil.", validKey:"✅ Clé validée ! Déverrouillage en cours…",
+    tooManyAttempts:"⏳ Trop de tentatives. Réessayez dans quelques minutes.",
     reportItems:"Nombre d'articles", reportUnits:"Unités en stock", reportValue:"Valeur totale du stock",
     reportMargin:"Marge moyenne", reportLow:"Articles en stock critique",
     scanResultTitle:"Emplacement suggéré", justification:"Justification",
+    bannedTitle:"Accès désactivé", bannedDesc:"Cet appareil n'est plus autorisé à utiliser Smart Logistics. Contactez l'administrateur.",
+    roleAdmin:"Rôle actuel : Administrateur", roleOp:"Rôle actuel : Opérateur (lecture/scan uniquement)",
+    pinPrompt:"Entrez le code PIN (par défaut 0000) :", pinWrong:"Code PIN incorrect.",
+    readOnlyMsg:"Action réservée à l'Administrateur.", labelTitle:"Étiquette",
   },
   de: {
-    tag:"Lagerverwaltungssystem", installBtn:"App installieren",
-    lockedTitle:"🔒 Testphase abgelaufen", lockedDesc:"Ihre 7-tägige kostenlose Testphase ist beendet. Geben Sie einen gültigen Lizenzschlüssel ein.",
+    installBtn:"App installieren", lockedTitle:"🔒 Testphase abgelaufen",
+    lockedDesc:"Ihre kostenlose Testphase ist beendet. Geben Sie einen gültigen Lizenzschlüssel ein.",
     deviceIdLabel:"Geräte-ID (Device ID) — bitte an uns senden", copyBtn:"Kopieren",
     keyLabel:"Lizenzschlüssel", unlockBtn:"Freischalten", pricingTitle:"Offizielle Preisliste",
-    footerNote:"© 2026 Smart Logistics — Offline-First-System. Jeder Schlüssel ist an dieses Gerät gebunden.",
+    contactUsDirect:"Fragen vor dem Kauf? Kontaktieren Sie uns direkt:",
     chosenPlan:"Gewählter Tarif", chooseChannel:"Wählen Sie einen Kanal für Ihre Anfrage (Tarif + Geräte-ID enthalten):",
     emailBtn:"E-Mail", cancelBtn:"Abbrechen", installTitle:"Smart Logistics installieren",
     installIOS:"iOS / Safari: Tippen Sie auf „Teilen“, dann „Zum Home-Bildschirm“.",
     installAndroid:"Android / Chrome: Nutzen Sie „Installieren“ oder Menü ⋮ → „App installieren“.",
-    okBtn:"OK", tabInventory:"Inventar", tabWarehouse:"Lager", tabReport:"Bericht", tabArch:"Architektur",
-    invTitle:"Erweiterte Bestandsübersicht", addItemBtn:"+ Artikel hinzufügen",
+    okBtn:"OK", saveBtn:"Speichern",
+    invTitle:"Erweiterte Bestandsübersicht", addItemBtn:"+ Artikel hinzufügen", searchPh:"Artikel suchen (Ref. oder Name)…",
     statItems:"Artikel", statValue:"Lagerwert", statMargin:"Ø Marge", statLow:"Kritischer Bestand",
-    colRef:"Ref.", colName:"Bezeichnung", colABC:"ABC", colQty:"Menge", colCost:"Selbstkosten", colSell:"Verkaufspreis", colMargin:"Marge",
+    colRef:"Ref.", colName:"Bezeichnung", colABC:"ABC", colQty:"Menge", colCost:"Selbstkosten", colSell:"Verkaufspreis", colMargin:"Marge", colDate:"Datum",
+    movTitle:"Lagerbewegungen", movItem:"Artikel", movType:"Typ", movIn:"Eingang", movOut:"Ausgang", movQty:"Menge", movReason:"Grund", movSaveBtn:"Bewegung speichern",
+    supTitle:"Lieferanten", addSupBtn:"+ Lieferant hinzufügen",
     whTitle:"Paketplatzierung — Zero Communication", whDesc:"Paket scannen: Der optimale Lagerplatz leuchtet automatisch auf.",
     scanWeight:"Paketgewicht (kg)", scanAbc:"ABC-Umschlagskategorie",
     abcA:"A — Schneller Umschlag", abcB:"B — Mittlerer Umschlag", abcC:"C — Langsamer Umschlag",
     scanBtn:"Lagerplatz berechnen", legendFree:"Freier Platz", legendSuggested:"Vorgeschlagener Platz",
-    repTitle:"Logistik-Aktivitätsbericht", exportBtn:"⬇ CSV exportieren",
+    taskTitle:"Aufgaben & Erinnerungen", addTaskBtn:"+ Aufgabe hinzufügen",
+    repTitle:"Logistik-Aktivitätsbericht", exportBtn:"⬇ CSV exportieren", reorderTitle:"⚠ Nachbestellvorschläge", chartTitle:"Lagerwert nach ABC-Kategorie",
     archTitle:"Technische Architektur", archDesc:"Konzeptionelles Diagramm — Zielinfrastruktur für eine zukünftige Netzwerkbereitstellung.",
     archAws:"Geplante Replikation zwischen Lagern, asynchrone Synchronisierung und verschlüsselte S3-Backups (Roadmap).",
     archWeb3:"Gateway zu einem verteilten Register für die Rückverfolgbarkeit von Lagerbewegungen (Konzept).",
-    archOffline:"Alle aktuellen Daten werden lokal gespeichert (LocalStorage): garantierter Betrieb ohne Verbindung.",
+    archOffline:"Alle aktuellen Daten werden lokal gespeichert: garantierter Betrieb ohne Verbindung.",
     archPwa:"App auf dem Startbildschirm installierbar (Mobil, Tablet, Computer).",
-    itemModalTitle:"Neuer Artikel", saveBtn:"Speichern",
+    setTitle:"Einstellungen", setTheme:"Anzeige", toggleLight:"🌗 Hell/Dunkel umschalten",
+    setRole:"Benutzerrolle", setRoleToggle:"Rolle wechseln (PIN)",
+    setBackup:"Sicherung & Wiederherstellung", backupBtn:"⬇ Exportieren", restoreBtn:"⬆ Importieren", setAudit:"Audit-Protokoll",
     trialDays: n => `Kostenlose Testphase — noch ${n} Tag(e)`,
     licValid: exp => exp==='lifetime' ? 'Lebenslange Lizenz — aktiv' : `Lizenz aktiv bis ${exp}`,
     invalidKey:"❌ Ungültiger Schlüssel für dieses Gerät.", validKey:"✅ Schlüssel gültig! Wird entsperrt…",
+    tooManyAttempts:"⏳ Zu viele Versuche. Bitte später erneut versuchen.",
     reportItems:"Anzahl Artikel", reportUnits:"Einheiten auf Lager", reportValue:"Gesamtlagerwert",
     reportMargin:"Ø Marge", reportLow:"Artikel mit kritischem Bestand",
     scanResultTitle:"Vorgeschlagener Platz", justification:"Begründung",
+    bannedTitle:"Zugriff deaktiviert", bannedDesc:"Dieses Gerät ist nicht mehr autorisiert. Kontaktieren Sie den Administrator.",
+    roleAdmin:"Aktuelle Rolle: Administrator", roleOp:"Aktuelle Rolle: Bediener (nur Lesen/Scannen)",
+    pinPrompt:"PIN-Code eingeben (Standard 0000):", pinWrong:"Falscher PIN-Code.",
+    readOnlyMsg:"Aktion nur für Administrator.", labelTitle:"Etikett",
   }
 };
 let LANG = localStorage.getItem('sl_lang') || 'fr';
 function t(key, ...args){ const v = I18N[LANG][key]; return typeof v==='function' ? v(...args) : v; }
-function applyLang(){
+
+function applyI18n(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const k = el.getAttribute('data-i18n');
-    if(I18N[LANG][k]) el.textContent = typeof I18N[LANG][k]==='function' ? '' : I18N[LANG][k];
+    if(I18N[LANG][k] && typeof I18N[LANG][k]!=='function') el.textContent = I18N[LANG][k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const k = el.getAttribute('data-i18n-ph');
+    if(I18N[LANG][k]) el.placeholder = I18N[LANG][k];
   });
   document.documentElement.lang = LANG;
-  renderPricing(); renderInventory(); renderReport(); updateTrialUi();
 }
 
-/* ---------- PRICING (F CFA) ---------- */
-const PLANS = [
-  {code:'M1', days:30,   fr:'Mensuel (30 jours)',   de:'Monatlich (30 Tage)',   price:25500},
-  {code:'M2', days:60,   fr:'Bimestriel (60 jours)',de:'Zweimonatlich (60 Tage)',price:45800},
-  {code:'M3', days:90,   fr:'Trimestriel (90 jours)',de:'Vierteljährlich (90 Tage)',price:63800},
-  {code:'S1', days:180,  fr:'Semestriel (180 jours)',de:'Halbjährlich (180 Tage)',price:115000},
-  {code:'A1', days:365,  fr:'Annuel (365 jours)',   de:'Jährlich (365 Tage)',    price:190000},
-  {code:'A2', days:730,  fr:'2 ans (730 jours)',    de:'2 Jahre (730 Tage)',     price:318000},
-  {code:'A3', days:1095, fr:'3 ans (1095 jours)',   de:'3 Jahre (1095 Tage)',    price:418000},
-  {code:'VIE',days:99999,fr:'À vie (Accès illimité)',de:'Lebenslang (Unbegrenzt)',price:950000}
-];
+function applyConfig(){
+  document.documentElement.style.setProperty('--c-primary', CONFIG.theme.primary);
+  document.documentElement.style.setProperty('--c-accent', CONFIG.theme.accent);
+  document.documentElement.style.setProperty('--c-bg', CONFIG.theme.background);
+  document.documentElement.style.setProperty('--font-main', `'${CONFIG.theme.font}', ui-sans-serif, system-ui`);
+
+  ['appNameLock','appNameApp'].forEach(id=>document.getElementById(id).textContent = CONFIG.meta.appName);
+  document.getElementById('appSubtitleLock').textContent = LANG==='fr' ? CONFIG.meta.subtitleFr : CONFIG.meta.subtitleDe;
+  document.getElementById('footerPowered').textContent = CONFIG.meta.footerText;
+  document.title = CONFIG.meta.appName + ' — WMS Offline';
+  ['logoImgLock','logoImgApp'].forEach(id=>{ const img=document.getElementById(id); img.src = CONFIG.meta.logo; });
+
+  document.querySelectorAll('h1,h2').forEach(h=>h.style.fontWeight = CONFIG.theme.boldTitles ? '700' : '500');
+
+  renderFooterContacts();
+  renderFabContacts();
+  renderPricing();
+  renderTabsNav();
+}
+
 function fmtPrice(n){ return n.toLocaleString('fr-FR').replace(/,/g,' ') + ' F CFA'; }
 
 function renderPricing(){
   const grid = document.getElementById('pricingGrid');
   grid.innerHTML = '';
-  PLANS.forEach(p=>{
+  CONFIG.pricing.filter(p=>p.enabled!==false).forEach(p=>{
     const card = document.createElement('div');
-    card.className = 'p-3 rounded-lg border border-base-700 bg-base-900 hover:border-amber transition cursor-pointer flex flex-col justify-between';
-    card.innerHTML = `
-      <div>
-        <p class="text-xs text-zinc-400 mb-1">${LANG==='fr'?p.fr:p.de}</p>
-        <p class="text-amber font-mono font-bold text-sm">${fmtPrice(p.price)}</p>
-      </div>
-      <button class="mt-3 text-[11px] px-2 py-1.5 rounded bg-base-800 hover:bg-amber hover:text-black font-semibold transition">${LANG==='fr'?'Choisir':'Wählen'}</button>`;
+    card.className = 'p-3 rounded-lg border border-base-700 bg-base-900 hover:accent-text transition cursor-pointer flex flex-col justify-between';
+    card.innerHTML = `<div><p class="text-xs text-zinc-400 mb-1">${LANG==='fr'?p.fr:p.de}</p><p class="accent-text font-mono font-bold text-sm">${fmtPrice(p.price)}</p></div>
+      <button class="mt-3 text-[11px] px-2 py-1.5 rounded bg-base-800 hover:accent-bg font-semibold transition">${LANG==='fr'?'Choisir':'Wählen'}</button>`;
     card.querySelector('button').addEventListener('click', ()=>openContactModal(p));
     grid.appendChild(card);
   });
 }
 
-/* ---------- HASH / LICENSE ENGINE (local, secret-salted) ---------- */
-const SECRET_SALT = "SL-DONKO-EMPIRE-2026-WMS-#Xk9qP";
-function djb2(str){
-  let h = 5381;
-  for(let i=0;i<str.length;i++){ h = ((h*33) ^ str.charCodeAt(i)) >>> 0; }
-  return h >>> 0;
+function waLink(number, text){ return `https://wa.me/${number}?text=${encodeURIComponent(text)}`; }
+function mailLink(emails, subject, body){ return `mailto:${emails.join(',')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`; }
+
+function renderFooterContacts(){
+  const box = document.getElementById('footerContactBtns');
+  box.innerHTML = '';
+  const genericText = `${CONFIG.meta.appName} — ${LANG==='fr'?"Demande d'information":'Informationsanfrage'}\nDevice ID: ${DEVICE_ID}`;
+  (CONFIG.contacts.whatsapp||[]).forEach(w=>{
+    const a = document.createElement('a');
+    a.href = waLink(w.number, genericText); a.target = '_blank';
+    a.className = 'px-4 py-2 rounded-full bg-green-600 hover:bg-green-500 text-white text-xs font-semibold transition';
+    a.textContent = '💬 ' + (w.label||'WhatsApp');
+    box.appendChild(a);
+  });
+  if((CONFIG.contacts.emails||[]).length){
+    const a = document.createElement('a');
+    a.href = mailLink(CONFIG.contacts.emails, `${CONFIG.meta.appName} — Contact`, genericText); a.target='_blank';
+    a.className = 'px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition';
+    a.textContent = '✉️ Email';
+    box.appendChild(a);
+  }
 }
+function renderFabContacts(){
+  const box = document.getElementById('fabContacts');
+  box.innerHTML = '';
+  const genericText = `${CONFIG.meta.appName} — Support\nDevice ID: ${DEVICE_ID}`;
+  (CONFIG.contacts.whatsapp||[]).slice(0,1).forEach(w=>{
+    const a = document.createElement('a');
+    a.href = waLink(w.number, genericText); a.target='_blank';
+    a.className = 'w-11 h-11 rounded-full bg-green-600 hover:bg-green-500 flex items-center justify-center text-white text-lg';
+    a.textContent = '💬';
+    box.appendChild(a);
+  });
+}
+
+function renderTabsNav(){
+  const nav = document.getElementById('tabsNav');
+  nav.innerHTML = '';
+  const sections = [...CONFIG.sections].filter(s=>s.enabled!==false).sort((a,b)=>a.order-b.order);
+  sections.forEach(s=>{
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn px-3 py-2 rounded-md bg-base-900 border border-base-700';
+    btn.dataset.tab = s.id;
+    btn.textContent = LANG==='fr' ? s.labelFr : s.labelDe;
+    btn.addEventListener('click', ()=>showTab(s.id));
+    nav.appendChild(btn);
+  });
+  const first = sections[0];
+  if(first) showTab(first.id);
+}
+function showTab(tab){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden-imp'));
+  const panel = document.getElementById('tab-'+tab);
+  if(panel) panel.classList.remove('hidden-imp');
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    const active = b.dataset.tab===tab;
+    b.style.borderColor = active ? 'var(--c-primary)' : '';
+    b.style.color = active ? 'var(--c-primary)' : '';
+  });
+  if(tab==='wh') renderWarehouseGrid();
+  if(tab==='rep') renderReport();
+  if(tab==='mov') renderMovements();
+  if(tab==='sup') renderSuppliers();
+  if(tab==='task') renderTasks();
+  if(tab==='set') renderSettings();
+}
+
+/* ---------- SECURITY / ANTI-BOT DETERRENTS (client-side best-effort only) ---------- */
+document.addEventListener('contextmenu', e=>e.preventDefault());
+document.addEventListener('keydown', e=>{
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key)) || (e.ctrlKey&&e.key==='u')) e.preventDefault();
+});
+function rateLimitCheck(){
+  const raw = localStorage.getItem('sl_key_attempts');
+  const data = raw ? JSON.parse(raw) : {count:0, lockUntil:0};
+  if(Date.now() < data.lockUntil) return false;
+  return true;
+}
+function rateLimitRegister(success){
+  const raw = localStorage.getItem('sl_key_attempts');
+  let data = raw ? JSON.parse(raw) : {count:0, lockUntil:0};
+  if(success){ data = {count:0, lockUntil:0}; }
+  else {
+    data.count = (data.count||0) + 1;
+    if(data.count >= 5){ data.lockUntil = Date.now() + 10*60000; data.count = 0; }
+  }
+  localStorage.setItem('sl_key_attempts', JSON.stringify(data));
+}
+function addAudit(msg){
+  const raw = localStorage.getItem('sl_audit');
+  const arr = raw ? JSON.parse(raw) : [];
+  arr.unshift({ts:new Date().toISOString(), msg});
+  localStorage.setItem('sl_audit', JSON.stringify(arr.slice(0,200)));
+}
+
+/* ---------- HASH / LICENSE ENGINE (must match admin.html exactly) ---------- */
+const SECRET_SALT = "SL-DONKO-EMPIRE-2026-WMS-#Xk9qP";
+function djb2(str){ let h=5381; for(let i=0;i<str.length;i++){ h=((h*33)^str.charCodeAt(i))>>>0; } return h>>>0; }
 function genCode(deviceId, days){
   const raw = deviceId + "|" + days + "|" + SECRET_SALT;
   const h1 = djb2(raw).toString(36);
   const h2 = djb2(raw.split('').reverse().join('')).toString(36);
-  let code = (h1 + h2).toUpperCase().replace(/[^A-Z0-9]/g,'').padEnd(8,'0').substring(0,8);
-  return code.substring(0,4) + '-' + code.substring(4,8);
+  let code = (h1+h2).toUpperCase().replace(/[^A-Z0-9]/g,'').padEnd(8,'0').substring(0,8);
+  return code.substring(0,4)+'-'+code.substring(4,8);
 }
-function codeForDays(days){
-  const plan = PLANS.find(p=>p.days===days);
-  return plan ? plan.code : null;
-}
-function daysForCode(code){
-  const plan = PLANS.find(p=>p.code===code);
-  return plan ? plan.days : null;
-}
-function buildLicenseKey(deviceId, days){
-  const dc = codeForDays(days);
-  if(!dc) return null;
-  return `SL-${dc}-${genCode(deviceId, days)}`;
-}
+function codeForDays(days){ const p = CONFIG.pricing.find(p=>p.days===days); return p ? p.code : (days===99999?'VIE':null); }
+function daysForCode(code){ const p = CONFIG.pricing.find(p=>p.code===code); return p ? p.days : (code==='VIE'?99999:null); }
 function validateLicenseKey(inputKey, deviceId){
   const key = (inputKey||'').trim().toUpperCase();
   const parts = key.split('-');
   if(parts.length !== 4 || parts[0] !== 'SL') return {valid:false};
-  const dc = parts[1];
-  const days = daysForCode(dc);
+  const days = daysForCode(parts[1]);
   if(!days) return {valid:false};
-  const suppliedCode = parts[2] + '-' + parts[3];
-  const expectedCode = genCode(deviceId, days);
-  if(suppliedCode !== expectedCode) return {valid:false};
+  const suppliedCode = parts[2]+'-'+parts[3];
+  if(suppliedCode !== genCode(deviceId, days)) return {valid:false};
   return {valid:true, days};
 }
-// Developer helper (console use only) — generate a key once the customer sends their Device ID.
-window.slGenerateKey = function(deviceId, days){ return buildLicenseKey(deviceId, days); };
 
 /* ---------- DEVICE FINGERPRINT ---------- */
 function getDeviceId(){
@@ -438,67 +658,74 @@ function getDeviceId(){
   try{
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    ctx.textBaseline = 'top'; ctx.font = '14px Arial';
-    ctx.fillStyle = '#f5a524'; ctx.fillRect(0,0,120,20);
-    ctx.fillStyle = '#08090a'; ctx.fillText('SmartLogistics-FP-2026', 2, 2);
+    ctx.textBaseline='top'; ctx.font='14px Arial';
+    ctx.fillStyle='#f5a524'; ctx.fillRect(0,0,120,20);
+    ctx.fillStyle='#08090a'; ctx.fillText('SmartLogistics-FP-2026',2,2);
     canvasData = canvas.toDataURL();
-  }catch(e){ canvasData = 'no-canvas'; }
+  }catch(e){ canvasData='no-canvas'; }
   const raw = [navigator.userAgent, navigator.platform||'', screen.width+'x'+screen.height, screen.colorDepth, canvasData].join('::');
   let id = djb2(raw).toString(36).toUpperCase() + djb2(raw.split('').reverse().join('')).toString(36).toUpperCase();
   id = id.replace(/[^A-Z0-9]/g,'').padEnd(12,'0').substring(0,12);
   localStorage.setItem('sl_device_id', id);
   return id;
 }
-
-/* ---------- LICENSE STATE ---------- */
 const DEVICE_ID = getDeviceId();
 const DAY_MS = 86400000;
 
 function getInstallDate(){
   let d = localStorage.getItem('sl_install_date');
-  if(!d){ d = Date.now().toString(); localStorage.setItem('sl_install_date', d); }
+  if(!d){ d=Date.now().toString(); localStorage.setItem('sl_install_date', d); }
   return parseInt(d,10);
 }
 function getStoredLicense(){
   const key = localStorage.getItem('sl_license_key');
-  const expiry = localStorage.getItem('sl_license_expiry'); // 'lifetime' or timestamp
+  const expiry = localStorage.getItem('sl_license_expiry');
   if(!key || !expiry) return null;
-  return { key, expiry };
+  return {key, expiry};
 }
 function isLicenseActive(){
   const lic = getStoredLicense();
   if(!lic) return false;
-  if(lic.expiry === 'lifetime') return true;
+  if(lic.expiry==='lifetime') return true;
   return Date.now() < parseInt(lic.expiry,10);
 }
-function trialDaysLeft(){
-  const installDate = getInstallDate();
-  const elapsed = Date.now() - installDate;
-  const left = 7 - Math.floor(elapsed / DAY_MS);
-  return left;
-}
-function isTrialActive(){ return trialDaysLeft() > 0; }
+function trialMsLeft(){ return (getInstallDate() + CONFIG.trial.days*DAY_MS) - Date.now(); }
+function isTrialActive(){ return trialMsLeft() > 0; }
+function isBanned(){ return (CONFIG.licenses.bannedDevices||[]).includes(DEVICE_ID); }
 
 function applyLicenseKey(inputKey){
-  const res = validateLicenseKey(inputKey, DEVICE_ID);
   const msgEl = document.getElementById('keyMsg');
+  if(!rateLimitCheck()){ msgEl.textContent = t('tooManyAttempts'); msgEl.className='mt-2 text-sm text-red-400'; return; }
+  const res = validateLicenseKey(inputKey, DEVICE_ID);
   if(!res.valid){
-    msgEl.textContent = t('invalidKey');
-    msgEl.className = 'mt-2 text-sm text-red-400';
+    rateLimitRegister(false);
+    addAudit(`Tentative de clé invalide: ${inputKey}`);
+    msgEl.textContent = t('invalidKey'); msgEl.className='mt-2 text-sm text-red-400';
     return false;
   }
-  const expiry = res.days === 99999 ? 'lifetime' : (Date.now() + res.days*DAY_MS).toString();
+  rateLimitRegister(true);
+  addAudit(`Licence activée: ${res.days} jours`);
+  const expiry = res.days===99999 ? 'lifetime' : (Date.now()+res.days*DAY_MS).toString();
   localStorage.setItem('sl_license_key', inputKey.trim().toUpperCase());
   localStorage.setItem('sl_license_expiry', expiry);
-  msgEl.textContent = t('validKey');
-  msgEl.className = 'mt-2 text-sm text-green-400';
+  msgEl.textContent = t('validKey'); msgEl.className='mt-2 text-sm text-green-400';
   setTimeout(boot, 700);
   return true;
 }
 
 /* ---------- BOOT / GATE ---------- */
+let countdownInterval = null;
 function boot(){
   document.getElementById('deviceIdDisplay').textContent = DEVICE_ID;
+
+  if(isBanned()){
+    document.getElementById('app').classList.add('hidden-imp');
+    document.getElementById('paywallScreen').classList.add('hidden-imp');
+    document.getElementById('bannedScreen').classList.remove('hidden-imp');
+    document.getElementById('bannedScreen').classList.add('flex');
+    addAudit('Accès bloqué: appareil banni');
+    return;
+  }
   const licensed = isLicenseActive();
   const trialOk = isTrialActive();
 
@@ -507,7 +734,6 @@ function boot(){
     document.getElementById('app').classList.remove('hidden-imp');
     updateTrialUi();
     renderInventory(); renderWarehouseGrid(); renderReport();
-    showTab('inv');
   } else {
     document.getElementById('app').classList.add('hidden-imp');
     document.getElementById('paywallScreen').classList.remove('hidden-imp');
@@ -515,43 +741,118 @@ function boot(){
     document.getElementById('trialStatusBox').classList.add('hidden-imp');
   }
 }
-
+function fmtCountdown(ms){
+  if(ms<=0) return '00j 00:00:00';
+  const d = Math.floor(ms/DAY_MS); ms-=d*DAY_MS;
+  const h = Math.floor(ms/3600000); ms-=h*3600000;
+  const m = Math.floor(ms/60000); ms-=m*60000;
+  const s = Math.floor(ms/1000);
+  return `${String(d).padStart(2,'0')}j ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
 function updateTrialUi(){
   const licensed = isLicenseActive();
   const banner = document.getElementById('trialBanner');
   const mini = document.getElementById('licenseStatusMini');
   const trialBox = document.getElementById('trialStatusBox');
+  if(countdownInterval) clearInterval(countdownInterval);
   if(licensed){
     const lic = getStoredLicense();
-    const expiryStr = lic.expiry === 'lifetime' ? 'lifetime' : new Date(parseInt(lic.expiry,10)).toLocaleDateString(LANG==='fr'?'fr-FR':'de-DE');
+    const expiryStr = lic.expiry==='lifetime' ? 'lifetime' : new Date(parseInt(lic.expiry,10)).toLocaleDateString(LANG==='fr'?'fr-FR':'de-DE');
     banner.classList.add('hidden-imp');
     mini.textContent = t('licValid', expiryStr);
     trialBox.classList.add('hidden-imp');
   } else {
-    const left = Math.max(trialDaysLeft(),0);
-    banner.textContent = t('trialDays', left);
     banner.classList.remove('hidden-imp');
-    mini.textContent = t('trialDays', left);
-    trialBox.textContent = t('trialDays', left);
     trialBox.classList.remove('hidden-imp');
+    const tick = ()=>{
+      const ms = trialMsLeft();
+      const label = t('trialDays', Math.max(Math.ceil(ms/DAY_MS),0));
+      banner.textContent = label;
+      mini.textContent = label;
+      document.getElementById('trialStatusText').textContent = label;
+      document.getElementById('trialCountdown').textContent = fmtCountdown(ms);
+      if(ms<=0){ clearInterval(countdownInterval); boot(); }
+    };
+    tick();
+    countdownInterval = setInterval(tick, 1000);
   }
 }
 
-/* ---------- TABS ---------- */
-function showTab(tab){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden-imp'));
-  document.getElementById('tab-'+tab).classList.remove('hidden-imp');
-  document.querySelectorAll('.tab-btn').forEach(b=>{
-    b.classList.toggle('border-amber', b.dataset.tab===tab);
-    b.classList.toggle('text-amber', b.dataset.tab===tab);
-  });
-  if(tab==='wh') renderWarehouseGrid();
-  if(tab==='rep') renderReport();
+/* ---------- ROLE (Admin / Opérateur) ---------- */
+function getRole(){ return localStorage.getItem('sl_role') || 'admin'; }
+function isAdminRole(){ return getRole()==='admin'; }
+function guardAdmin(){
+  if(!isAdminRole()){ alert(t('readOnlyMsg')); return false; }
+  return true;
 }
-document.getElementById('tabsNav').addEventListener('click', e=>{
-  const btn = e.target.closest('.tab-btn');
-  if(btn) showTab(btn.dataset.tab);
+function renderSettings(){
+  document.getElementById('roleStatus').textContent = isAdminRole() ? t('roleAdmin') : t('roleOp');
+  const audit = document.getElementById('auditLog');
+  const raw = localStorage.getItem('sl_audit');
+  const arr = raw ? JSON.parse(raw) : [];
+  audit.innerHTML = arr.slice(0,50).map(a=>`<div>${new Date(a.ts).toLocaleString()} — ${a.msg}</div>`).join('') || '<div class="text-zinc-700">—</div>';
+}
+document.getElementById('roleToggleBtn').addEventListener('click', ()=>{
+  const pin = prompt(t('pinPrompt'));
+  if(pin===null) return;
+  if(pin !== '0000'){ alert(t('pinWrong')); return; }
+  localStorage.setItem('sl_role', isAdminRole() ? 'operator' : 'admin');
+  renderSettings();
 });
+document.getElementById('themeToggleBtn').addEventListener('click', ()=>{
+  document.documentElement.classList.toggle('light');
+  localStorage.setItem('sl_theme_light', document.documentElement.classList.contains('light') ? '1':'0');
+});
+if(localStorage.getItem('sl_theme_light')==='1') document.documentElement.classList.add('light');
+
+/* ---------- BACKUP / RESTORE ---------- */
+document.getElementById('backupBtn').addEventListener('click', ()=>{
+  const dump = {};
+  ['sl_inventory','sl_movements','sl_suppliers','sl_tasks','sl_audit'].forEach(k=>{ dump[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify(dump,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='smart_logistics_backup.json';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+});
+document.getElementById('restoreInput').addEventListener('change', e=>{
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const dump = JSON.parse(reader.result);
+      Object.keys(dump).forEach(k=>{ if(dump[k]!=null) localStorage.setItem(k, dump[k]); });
+      renderInventory(); renderMovements(); renderSuppliers(); renderTasks(); renderSettings();
+      alert('OK');
+    }catch(err){ alert('Fichier invalide'); }
+  };
+  reader.readAsText(file);
+});
+
+/* ---------- GENERIC MODAL HELPER ---------- */
+function openGenModal(title, fields, onSave){
+  document.getElementById('genModalTitle').textContent = title;
+  const body = document.getElementById('genModalBody');
+  body.innerHTML = '';
+  fields.forEach(f=>{
+    const input = document.createElement(f.type==='select' ? 'select' : 'input');
+    input.id = 'gm_'+f.key;
+    input.className = (f.span2?'col-span-2 ':'') + 'bg-base-950 border border-base-700 rounded px-3 py-2 outline-none focus:accent-text';
+    if(f.type && f.type!=='select') input.type = f.type;
+    if(f.placeholder) input.placeholder = f.placeholder;
+    if(f.type==='select'){ (f.options||[]).forEach(o=>{ const opt=document.createElement('option'); opt.value=o.value; opt.textContent=o.label; input.appendChild(opt); }); }
+    if(f.value!==undefined) input.value = f.value;
+    body.appendChild(input);
+  });
+  const modal = document.getElementById('genModal');
+  modal.classList.remove('hidden-imp'); modal.classList.add('flex');
+  const save = ()=>{
+    const values = {}; fields.forEach(f=>values[f.key] = document.getElementById('gm_'+f.key).value);
+    onSave(values);
+    modal.classList.add('hidden-imp'); modal.classList.remove('flex');
+  };
+  document.getElementById('genModalSave').onclick = save;
+  document.getElementById('genModalClose').onclick = ()=>{ modal.classList.add('hidden-imp'); modal.classList.remove('flex'); };
+}
 
 /* ---------- INVENTORY ---------- */
 function getInventory(){ try{ return JSON.parse(localStorage.getItem('sl_inventory')||'[]'); }catch(e){ return []; } }
@@ -561,106 +862,194 @@ function renderInventory(){
   const inv = getInventory();
   const tbody = document.getElementById('invTableBody');
   if(!tbody) return;
+  const q = (document.getElementById('invSearch').value||'').toLowerCase();
   tbody.innerHTML = '';
   let totalValue=0, marginSum=0, marginCount=0, lowCount=0;
   inv.forEach(item=>{
-    const margin = item.sell - item.cost;
+    const margin = item.sell-item.cost;
     const marginPct = item.cost>0 ? (margin/item.cost*100) : 0;
     totalValue += item.qty*item.cost;
     marginSum += marginPct; marginCount++;
     const isLow = item.qty < item.threshold;
     if(isLow) lowCount++;
+    if(q && !(item.ref.toLowerCase().includes(q) || item.name.toLowerCase().includes(q))) return;
     const tr = document.createElement('tr');
-    tr.className = 'border-t border-base-800 ' + (isLow ? 'bg-red-950/40' : '');
+    tr.className = 'border-t border-base-800 ' + (isLow?'bg-red-950/40':'');
     tr.innerHTML = `
       <td class="px-3 py-2 font-mono text-xs">${item.ref}</td>
       <td class="px-3 py-2">${item.name}</td>
-      <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.abc==='A'?'bg-green-600':item.abc==='B'?'bg-amber text-black':'bg-zinc-600'}">${item.abc}</span></td>
+      <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.abc==='A'?'bg-green-600':item.abc==='B'?'accent-bg':'bg-zinc-600'}">${item.abc}</span></td>
       <td class="px-3 py-2 text-right ${isLow?'text-red-400 font-bold':''}">${item.qty}</td>
       <td class="px-3 py-2 text-right font-mono">${item.cost.toLocaleString()}</td>
       <td class="px-3 py-2 text-right font-mono">${item.sell.toLocaleString()}</td>
       <td class="px-3 py-2 text-right font-mono ${margin>=0?'text-green-400':'text-red-400'}">${marginPct.toFixed(1)}%</td>
-      <td class="px-3 py-2 text-center"><button data-id="${item.id}" class="delItemBtn text-zinc-500 hover:text-red-400">✕</button></td>`;
+      <td class="px-3 py-2 text-center whitespace-nowrap">
+        <button data-id="${item.id}" class="labelItemBtn text-zinc-500 hover:accent-text mr-2">🏷️</button>
+        <button data-id="${item.id}" class="delItemBtn text-zinc-500 hover:text-red-400">✕</button>
+      </td>`;
     tbody.appendChild(tr);
   });
   document.getElementById('statItems').textContent = inv.length;
   document.getElementById('statValue').textContent = totalValue.toLocaleString();
-  document.getElementById('statMargin').textContent = (marginCount ? (marginSum/marginCount).toFixed(1) : 0) + '%';
+  document.getElementById('statMargin').textContent = (marginCount?(marginSum/marginCount).toFixed(1):0)+'%';
   document.getElementById('statLow').textContent = lowCount;
   tbody.querySelectorAll('.delItemBtn').forEach(b=>b.addEventListener('click', ()=>{
-    setInventory(getInventory().filter(i=>i.id!==b.dataset.id));
-    renderInventory();
+    if(!guardAdmin()) return;
+    setInventory(getInventory().filter(i=>i.id!==b.dataset.id)); renderInventory(); populateMovItemSelect();
+  }));
+  tbody.querySelectorAll('.labelItemBtn').forEach(b=>b.addEventListener('click', ()=>openLabel(inv.find(i=>i.id===b.dataset.id))));
+}
+document.getElementById('invSearch').addEventListener('input', renderInventory);
+document.getElementById('addItemBtn').addEventListener('click', ()=>{
+  if(!guardAdmin()) return;
+  openGenModal(t('addItemBtn'), [
+    {key:'ref', placeholder:'Réf.'}, {key:'name', placeholder:'Désignation'},
+    {key:'abc', type:'select', options:[{value:'A',label:'A'},{value:'B',label:'B'},{value:'C',label:'C'}]},
+    {key:'qty', type:'number', placeholder:'Qté'}, {key:'threshold', type:'number', placeholder:'Seuil critique'},
+    {key:'cost', type:'number', placeholder:'Prix revient'}, {key:'sell', type:'number', placeholder:'Prix vente', span2:true},
+  ], v=>{
+    const inv = getInventory();
+    inv.push({ id:'it_'+Date.now(), ref:v.ref||'—', name:v.name||'—', abc:v.abc||'A', qty:parseFloat(v.qty)||0, threshold:parseFloat(v.threshold)||0, cost:parseFloat(v.cost)||0, sell:parseFloat(v.sell)||0 });
+    setInventory(inv); renderInventory(); populateMovItemSelect();
+  });
+});
+
+/* ---------- LABEL / VISUAL CODE (not a scannable standard barcode) ---------- */
+function openLabel(item){
+  if(!item) return;
+  document.getElementById('labelRef').textContent = item.ref;
+  document.getElementById('labelName').textContent = item.name;
+  const canvas = document.getElementById('labelCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  const seed = djb2(item.ref+item.name);
+  let x = 10;
+  for(let i=0;i<40 && x<canvas.width-10;i++){
+    const bit = (seed >> (i%32)) & 1;
+    const w = bit ? 4 : 2;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x, 10, w, 70);
+    x += w + 2;
+  }
+  const modal = document.getElementById('labelModal');
+  modal.classList.remove('hidden-imp'); modal.classList.add('flex');
+}
+document.getElementById('closeLabelModal').addEventListener('click', ()=>{
+  const modal = document.getElementById('labelModal'); modal.classList.add('hidden-imp'); modal.classList.remove('flex');
+});
+
+/* ---------- MOVEMENTS ---------- */
+function getMovements(){ try{ return JSON.parse(localStorage.getItem('sl_movements')||'[]'); }catch(e){ return []; } }
+function setMovements(arr){ localStorage.setItem('sl_movements', JSON.stringify(arr)); }
+function populateMovItemSelect(){
+  const sel = document.getElementById('movItemSelect'); if(!sel) return;
+  sel.innerHTML = '';
+  getInventory().forEach(i=>{ const opt=document.createElement('option'); opt.value=i.id; opt.textContent=`${i.ref} — ${i.name}`; sel.appendChild(opt); });
+}
+function renderMovements(){
+  populateMovItemSelect();
+  const tbody = document.getElementById('movTableBody');
+  const inv = getInventory();
+  tbody.innerHTML = getMovements().slice(0,100).map(m=>{
+    const item = inv.find(i=>i.id===m.itemId);
+    return `<tr class="border-t border-base-800"><td class="px-3 py-2 text-xs">${new Date(m.date).toLocaleString()}</td><td class="px-3 py-2 font-mono text-xs">${item?item.ref:'?'}</td><td class="px-3 py-2 text-center">${m.type==='IN'?'⬇':'⬆'} ${m.type}</td><td class="px-3 py-2 text-right">${m.qty}</td><td class="px-3 py-2 text-zinc-400">${m.reason||''}</td></tr>`;
+  }).join('') || `<tr><td class="px-3 py-4 text-zinc-600 text-center" colspan="5">—</td></tr>`;
+}
+document.getElementById('movSaveBtn').addEventListener('click', ()=>{
+  if(!guardAdmin()) return;
+  const itemId = document.getElementById('movItemSelect').value;
+  const type = document.getElementById('movType').value;
+  const qty = parseFloat(document.getElementById('movQty').value)||0;
+  const reason = document.getElementById('movReason').value;
+  if(!itemId || qty<=0) return;
+  const inv = getInventory();
+  const item = inv.find(i=>i.id===itemId);
+  if(!item) return;
+  item.qty += (type==='IN'?qty:-qty);
+  setInventory(inv);
+  const movs = getMovements(); movs.unshift({itemId, type, qty, reason, date:Date.now()}); setMovements(movs);
+  document.getElementById('movQty').value=1; document.getElementById('movReason').value='';
+  renderMovements(); renderInventory();
+  addAudit(`Mouvement ${type} ${qty} sur ${item.ref}`);
+});
+
+/* ---------- SUPPLIERS ---------- */
+function getSuppliers(){ try{ return JSON.parse(localStorage.getItem('sl_suppliers')||'[]'); }catch(e){ return []; } }
+function setSuppliers(arr){ localStorage.setItem('sl_suppliers', JSON.stringify(arr)); }
+function renderSuppliers(){
+  const box = document.getElementById('supList'); if(!box) return;
+  const sups = getSuppliers();
+  box.innerHTML = sups.map(s=>`
+    <div class="p-3 rounded-lg border border-base-700 bg-base-900 flex justify-between items-start">
+      <div><p class="font-bold text-white text-sm">${s.name}</p><p class="text-xs text-zinc-500">${s.phone||''} ${s.email?'· '+s.email:''}</p><p class="text-xs text-zinc-600 mt-1">${s.items||''}</p></div>
+      <button data-id="${s.id}" class="delSupBtn text-zinc-500 hover:text-red-400">✕</button>
+    </div>`).join('') || `<p class="text-zinc-600 text-sm">—</p>`;
+  box.querySelectorAll('.delSupBtn').forEach(b=>b.addEventListener('click', ()=>{
+    if(!guardAdmin()) return;
+    setSuppliers(getSuppliers().filter(s=>s.id!==b.dataset.id)); renderSuppliers();
   }));
 }
-
-document.getElementById('addItemBtn').addEventListener('click', ()=>{
-  ['f_ref','f_name','f_qty','f_threshold','f_cost','f_sell'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f_abc').value = 'A';
-  document.getElementById('itemModal').classList.remove('hidden-imp');
-  document.getElementById('itemModal').classList.add('flex');
-});
-document.getElementById('closeItemModal').addEventListener('click', ()=>{
-  document.getElementById('itemModal').classList.add('hidden-imp');
-  document.getElementById('itemModal').classList.remove('flex');
-});
-document.getElementById('saveItemBtn').addEventListener('click', ()=>{
-  const item = {
-    id: 'it_'+Date.now(),
-    ref: document.getElementById('f_ref').value || '—',
-    name: document.getElementById('f_name').value || '—',
-    abc: document.getElementById('f_abc').value,
-    qty: parseFloat(document.getElementById('f_qty').value)||0,
-    threshold: parseFloat(document.getElementById('f_threshold').value)||0,
-    cost: parseFloat(document.getElementById('f_cost').value)||0,
-    sell: parseFloat(document.getElementById('f_sell').value)||0,
-  };
-  const inv = getInventory(); inv.push(item); setInventory(inv);
-  renderInventory();
-  document.getElementById('itemModal').classList.add('hidden-imp');
-  document.getElementById('itemModal').classList.remove('flex');
+document.getElementById('addSupBtn').addEventListener('click', ()=>{
+  if(!guardAdmin()) return;
+  openGenModal(t('addSupBtn'), [
+    {key:'name', placeholder:'Nom', span2:true}, {key:'phone', placeholder:'Téléphone'}, {key:'email', placeholder:'Email'},
+    {key:'items', placeholder:'Articles fournis', span2:true},
+  ], v=>{
+    const sups = getSuppliers(); sups.push({id:'sup_'+Date.now(), ...v}); setSuppliers(sups); renderSuppliers();
+  });
 });
 
-/* ---------- WAREHOUSE GRID / PLACEMENT ALGORITHM ---------- */
-const WH_CONFIG = { aisles:5, levels:4, shelves:6 };
+/* ---------- TASKS ---------- */
+function getTasks(){ try{ return JSON.parse(localStorage.getItem('sl_tasks')||'[]'); }catch(e){ return []; } }
+function setTasks(arr){ localStorage.setItem('sl_tasks', JSON.stringify(arr)); }
+function renderTasks(){
+  const box = document.getElementById('taskList'); if(!box) return;
+  const tasks = getTasks().sort((a,b)=>(a.due||'').localeCompare(b.due||''));
+  const today = new Date().toISOString().slice(0,10);
+  box.innerHTML = tasks.map(tk=>`
+    <div class="p-3 rounded-lg border ${tk.done?'border-base-800 opacity-50':(tk.due && tk.due<today?'border-red-500/50':'border-base-700')} bg-base-900 flex items-center justify-between gap-2">
+      <label class="flex items-center gap-2 flex-1 cursor-pointer">
+        <input type="checkbox" data-id="${tk.id}" class="taskDoneCk" ${tk.done?'checked':''}>
+        <span class="${tk.done?'line-through text-zinc-600':'text-white'} text-sm">${tk.title}</span>
+      </label>
+      <span class="text-xs text-zinc-500 font-mono">${tk.due||''}</span>
+      <button data-id="${tk.id}" class="delTaskBtn text-zinc-500 hover:text-red-400">✕</button>
+    </div>`).join('') || `<p class="text-zinc-600 text-sm">—</p>`;
+  box.querySelectorAll('.taskDoneCk').forEach(c=>c.addEventListener('change', ()=>{
+    const tasks = getTasks(); const tk = tasks.find(x=>x.id===c.dataset.id); tk.done = c.checked; setTasks(tasks); renderTasks();
+  }));
+  box.querySelectorAll('.delTaskBtn').forEach(b=>b.addEventListener('click', ()=>{
+    setTasks(getTasks().filter(x=>x.id!==b.dataset.id)); renderTasks();
+  }));
+}
+document.getElementById('addTaskBtn').addEventListener('click', ()=>{
+  openGenModal(t('addTaskBtn'), [ {key:'title', placeholder:'Titre', span2:true}, {key:'due', type:'date'} ], v=>{
+    const tasks = getTasks(); tasks.push({id:'tk_'+Date.now(), title:v.title||'—', due:v.due, done:false}); setTasks(tasks); renderTasks();
+  });
+});
+
+/* ---------- WAREHOUSE GRID / PLACEMENT ---------- */
+const WH_CONFIG = { aisles:5, levels:4 };
 function renderWarehouseGrid(suggested=null){
-  const grid = document.getElementById('warehouseGrid');
-  if(!grid) return;
-  grid.style.gridTemplateColumns = `repeat(${WH_CONFIG.shelves}, minmax(34px,1fr))`;
-  grid.innerHTML = '';
-  for(let level=WH_CONFIG.levels; level>=1; level--){
-    for(let aisle=1; aisle<=WH_CONFIG.aisles; aisle++){
-      for(let shelf=1; shelf<=1; shelf++){ /* placeholder loop kept for structure */ }
-    }
-  }
-  // Build a simple aisle x level grid (columns = aisles, rows = levels), each cell = one shelf slot
+  const grid = document.getElementById('warehouseGrid'); if(!grid) return;
   grid.style.gridTemplateColumns = `repeat(${WH_CONFIG.aisles}, minmax(46px,1fr))`;
+  grid.innerHTML = '';
   for(let level=WH_CONFIG.levels; level>=1; level--){
     for(let aisle=1; aisle<=WH_CONFIG.aisles; aisle++){
       const id = `A${aisle}-N${level}`;
       const cell = document.createElement('div');
       cell.className = 'grid-cell w-12 h-10 flex items-center justify-center text-[10px] font-mono rounded border border-base-700 bg-base-800 text-zinc-500';
       cell.textContent = id;
-      cell.dataset.cellId = id;
-      if(suggested === id) cell.classList.add('suggested');
+      if(suggested===id) cell.classList.add('suggested');
       grid.appendChild(cell);
     }
   }
 }
 function computeOptimalCell(weight, abc){
-  let level;
-  if(weight > 20) level = 1;
-  else if(abc==='A') level = 1;
-  else if(abc==='B') level = 2;
-  else level = WH_CONFIG.levels;
-
-  let aisle;
-  if(abc==='A') aisle = 1;
-  else if(abc==='B') aisle = Math.ceil(WH_CONFIG.aisles/2);
-  else aisle = WH_CONFIG.aisles;
-
-  level = Math.min(Math.max(level,1), WH_CONFIG.levels);
-  aisle = Math.min(Math.max(aisle,1), WH_CONFIG.aisles);
-  return { id:`A${aisle}-N${level}`, aisle, level };
+  let level = weight>20 ? 1 : (abc==='A'?1:abc==='B'?2:WH_CONFIG.levels);
+  let aisle = abc==='A' ? 1 : (abc==='B'?Math.ceil(WH_CONFIG.aisles/2):WH_CONFIG.aisles);
+  level = Math.min(Math.max(level,1),WH_CONFIG.levels); aisle = Math.min(Math.max(aisle,1),WH_CONFIG.aisles);
+  return {id:`A${aisle}-N${level}`};
 }
 document.getElementById('scanBtn').addEventListener('click', ()=>{
   const weight = parseFloat(document.getElementById('scanWeight').value)||0;
@@ -670,89 +1059,92 @@ document.getElementById('scanBtn').addEventListener('click', ()=>{
   const box = document.getElementById('scanResult');
   box.classList.remove('hidden-imp');
   const reason = LANG==='fr'
-    ? `Poids: ${weight} kg · Catégorie ${abc}. ${weight>20 ? "Poids élevé → niveau bas imposé (ergonomie)." : (abc==='A'?"Rotation rapide → allée proche de l'entrée, niveau accessible.":abc==='B'?"Rotation moyenne → allée et niveau intermédiaires.":"Rotation lente → allée éloignée, niveau haut.")}`
-    : `Gewicht: ${weight} kg · Kategorie ${abc}. ${weight>20 ? "Hohes Gewicht → niedrige Ebene (Ergonomie)." : (abc==='A'?"Schneller Umschlag → Gang nahe Eingang, gut erreichbar.":abc==='B'?"Mittlerer Umschlag → mittlerer Gang/Ebene.":"Langsamer Umschlag → entfernter Gang, obere Ebene.")}`;
-  box.innerHTML = `<p class="font-bold text-neon mb-1">${t('scanResultTitle')}: ${res.id}</p><p class="text-zinc-400 text-xs">${t('justification')}: ${reason}</p>`;
+    ? `Poids: ${weight} kg · Catégorie ${abc}. ${weight>20?"Poids élevé → niveau bas imposé (ergonomie).":(abc==='A'?"Rotation rapide → allée proche de l'entrée.":abc==='B'?"Rotation moyenne → allée/niveau intermédiaires.":"Rotation lente → allée éloignée, niveau haut.")}`
+    : `Gewicht: ${weight} kg · Kategorie ${abc}. ${weight>20?"Hohes Gewicht → niedrige Ebene.":(abc==='A'?"Schneller Umschlag → Gang nahe Eingang.":abc==='B'?"Mittlerer Umschlag → mittlerer Gang.":"Langsamer Umschlag → entfernter Gang.")}`;
+  box.innerHTML = `<p class="font-bold neon-text mb-1">${t('scanResultTitle')}: ${res.id}</p><p class="text-zinc-400 text-xs">${t('justification')}: ${reason}</p>`;
 });
 
-/* ---------- REPORT ---------- */
+/* ---------- REPORT (stats + reorder + chart) ---------- */
 function renderReport(){
-  const body = document.getElementById('reportBody');
-  if(!body) return;
+  const body = document.getElementById('reportBody'); if(!body) return;
   const inv = getInventory();
   const totalUnits = inv.reduce((s,i)=>s+i.qty,0);
   const totalValue = inv.reduce((s,i)=>s+i.qty*i.cost,0);
   const margins = inv.filter(i=>i.cost>0).map(i=>((i.sell-i.cost)/i.cost*100));
-  const avgMargin = margins.length ? (margins.reduce((a,b)=>a+b,0)/margins.length) : 0;
-  const lowCount = inv.filter(i=>i.qty<i.threshold).length;
-  const stats = [
-    [t('reportItems'), inv.length],
-    [t('reportUnits'), totalUnits],
-    [t('reportValue'), totalValue.toLocaleString()+' '],
-    [t('reportMargin'), avgMargin.toFixed(1)+'%'],
-    [t('reportLow'), lowCount],
-  ];
-  body.innerHTML = stats.map(([label,val])=>`
-    <div class="p-4 rounded-lg border border-base-700 bg-base-900">
-      <p class="text-[11px] uppercase text-zinc-500 mb-1">${label}</p>
-      <p class="text-2xl font-bold text-white">${val}</p>
+  const avgMargin = margins.length ? margins.reduce((a,b)=>a+b,0)/margins.length : 0;
+  const lowItems = inv.filter(i=>i.qty<i.threshold);
+  const stats = [[t('reportItems'),inv.length],[t('reportUnits'),totalUnits],[t('reportValue'),totalValue.toLocaleString()],[t('reportMargin'),avgMargin.toFixed(1)+'%'],[t('reportLow'),lowItems.length]];
+  body.innerHTML = stats.map(([l,v])=>`<div class="p-4 rounded-lg border border-base-700 bg-base-900"><p class="text-[11px] uppercase text-zinc-500 mb-1">${l}</p><p class="text-2xl font-bold text-white">${v}</p></div>`).join('');
+
+  const reorderBox = document.getElementById('reorderBody');
+  reorderBox.innerHTML = lowItems.length ? `<table class="w-full text-sm"><thead class="bg-base-900 text-zinc-400 text-xs uppercase"><tr><th class="text-left px-3 py-2">${t('colRef')}</th><th class="text-left px-3 py-2">${t('colName')}</th><th class="text-right px-3 py-2">${t('colQty')}</th><th class="text-right px-3 py-2">Suggestion</th></tr></thead><tbody>${
+    lowItems.map(i=>`<tr class="border-t border-base-800 bg-red-950/30"><td class="px-3 py-2 font-mono text-xs">${i.ref}</td><td class="px-3 py-2">${i.name}</td><td class="px-3 py-2 text-right text-red-400 font-bold">${i.qty}</td><td class="px-3 py-2 text-right">${Math.max(i.threshold*2-i.qty,i.threshold)}</td></tr>`).join('')
+  }</tbody></table>` : `<p class="text-zinc-600 text-sm p-3">—</p>`;
+
+  const chartBox = document.getElementById('chartBody');
+  const cats = {A:0,B:0,C:0};
+  inv.forEach(i=>cats[i.abc]=(cats[i.abc]||0)+i.qty*i.cost);
+  const max = Math.max(...Object.values(cats),1);
+  chartBox.innerHTML = Object.entries(cats).map(([k,v])=>`
+    <div class="flex items-center gap-2 text-xs">
+      <span class="w-6 font-bold">${k}</span>
+      <div class="flex-1 bg-base-800 rounded h-4 overflow-hidden"><div class="h-full accent-bg" style="width:${(v/max*100).toFixed(1)}%"></div></div>
+      <span class="w-24 text-right font-mono text-zinc-400">${v.toLocaleString()}</span>
     </div>`).join('');
 }
 document.getElementById('exportCsvBtn').addEventListener('click', ()=>{
   const inv = getInventory();
   let csv = 'Ref;Name;ABC;Qty;Threshold;Cost;Sell;MarginPct\n';
-  inv.forEach(i=>{
-    const mp = i.cost>0 ? ((i.sell-i.cost)/i.cost*100).toFixed(1) : '0';
-    csv += `${i.ref};${i.name};${i.abc};${i.qty};${i.threshold};${i.cost};${i.sell};${mp}\n`;
-  });
+  inv.forEach(i=>{ const mp = i.cost>0?((i.sell-i.cost)/i.cost*100).toFixed(1):'0'; csv += `${i.ref};${i.name};${i.abc};${i.qty};${i.threshold};${i.cost};${i.sell};${mp}\n`; });
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'smart_logistics_rapport.csv';
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
+  const a = document.createElement('a'); a.href=url; a.download='smart_logistics_rapport.csv';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 });
 
 /* ---------- PAYWALL EVENTS ---------- */
-document.getElementById('validateKeyBtn').addEventListener('click', ()=>{
-  applyLicenseKey(document.getElementById('licenseKeyInput').value);
-});
+document.getElementById('validateKeyBtn').addEventListener('click', ()=>applyLicenseKey(document.getElementById('licenseKeyInput').value));
 document.getElementById('licenseKeyInput').addEventListener('keydown', e=>{ if(e.key==='Enter') applyLicenseKey(e.target.value); });
 document.getElementById('copyDeviceId').addEventListener('click', ()=>{
   navigator.clipboard.writeText(DEVICE_ID).then(()=>{
-    const b = document.getElementById('copyDeviceId');
-    const old = b.textContent; b.textContent = LANG==='fr'?'Copié !':'Kopiert!';
-    setTimeout(()=>b.textContent=old, 1500);
+    const b = document.getElementById('copyDeviceId'); const old = b.textContent;
+    b.textContent = LANG==='fr'?'Copié !':'Kopiert!'; setTimeout(()=>b.textContent=old, 1500);
   });
 });
 
-/* ---------- CONTACT MODAL ---------- */
-const WA1 = '22901968091'.startsWith('229') ? '2290196809106' : '2290196809106';
-const WA_NUM_1 = '2290196809106';
-const WA_NUM_2 = '2290149105785';
-const EMAILS = ['empiredonko@gmail.com','hassanedonko9@gmail.com','hassanedonko10@gmail.com'];
-
+/* ---------- CONTACT MODAL (per plan) ---------- */
 function openContactModal(plan){
   const planLabel = LANG==='fr'?plan.fr:plan.de;
   document.getElementById('contactPlanName').textContent = planLabel;
   document.getElementById('contactPlanPrice').textContent = fmtPrice(plan.price);
-  const text = `Smart Logistics — Commande\nPlan: ${planLabel}\nPrix: ${fmtPrice(plan.price)}\nDevice ID: ${DEVICE_ID}`;
-  document.getElementById('waLink1').href = `https://wa.me/${WA_NUM_1}?text=${encodeURIComponent(text)}`;
-  document.getElementById('waLink2').href = `https://wa.me/${WA_NUM_2}?text=${encodeURIComponent(text)}`;
-  document.getElementById('mailLink').href = `mailto:${EMAILS.join(',')}?subject=${encodeURIComponent('Commande Smart Logistics — '+planLabel)}&body=${encodeURIComponent(text)}`;
+  const text = `${CONFIG.meta.appName} — Commande\nPlan: ${planLabel}\nPrix: ${fmtPrice(plan.price)}\nDevice ID: ${DEVICE_ID}`;
+  const box = document.getElementById('contactModalBtns');
+  box.innerHTML = '';
+  (CONFIG.contacts.whatsapp||[]).forEach(w=>{
+    const a = document.createElement('a'); a.target='_blank'; a.href = waLink(w.number, text);
+    a.className = 'block text-center px-4 py-2.5 rounded bg-green-600 hover:bg-green-500 font-semibold text-white transition';
+    a.textContent = `WhatsApp (${w.label||w.number})`;
+    box.appendChild(a);
+  });
+  if((CONFIG.contacts.emails||[]).length){
+    const a = document.createElement('a'); a.target='_blank';
+    a.href = mailLink(CONFIG.contacts.emails, `Commande ${CONFIG.meta.appName} — ${planLabel}`, text);
+    a.className = 'block text-center px-4 py-2.5 rounded bg-blue-600 hover:bg-blue-500 font-semibold text-white transition';
+    a.textContent = t('emailBtn');
+    box.appendChild(a);
+  }
   const modal = document.getElementById('contactModal');
   modal.classList.remove('hidden-imp'); modal.classList.add('flex');
 }
 document.getElementById('closeContactModal').addEventListener('click', ()=>{
-  const modal = document.getElementById('contactModal');
-  modal.classList.add('hidden-imp'); modal.classList.remove('flex');
+  const modal = document.getElementById('contactModal'); modal.classList.add('hidden-imp'); modal.classList.remove('flex');
 });
 
 /* ---------- LANG TOGGLE ---------- */
 function toggleLang(){
-  LANG = LANG==='fr' ? 'de' : 'fr';
+  LANG = LANG==='fr'?'de':'fr';
   localStorage.setItem('sl_lang', LANG);
-  applyLang();
+  applyI18n(); applyConfig(); boot();
 }
 document.getElementById('langToggle').addEventListener('click', toggleLang);
 document.getElementById('langToggleApp').addEventListener('click', toggleLang);
@@ -760,71 +1152,68 @@ document.getElementById('langToggleApp').addEventListener('click', toggleLang);
 /* ---------- PWA: manifest + service worker + install prompt ---------- */
 (function setupPwa(){
   const manifest = {
-    name: "Smart Logistics",
-    short_name: "SmartLog",
-    start_url: ".",
-    display: "standalone",
-    background_color: "#08090a",
-    theme_color: "#08090a",
-    icons: [
-      { src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192'><rect width='192' height='192' fill='%23f5a524'/><text x='50%' y='58%' font-size='90' text-anchor='middle' fill='%2308090a' font-family='sans-serif' font-weight='bold'>SL</text></svg>`), sizes:"192x192", type:"image/svg+xml" }
-    ]
+    name: CONFIG.meta.appName, short_name: "SmartLog", start_url: ".", display: "standalone",
+    background_color: "#08090a", theme_color: "#08090a",
+    icons: [{ src:"./favicon-192.png", sizes:"192x192", type:"image/png" }]
   };
   try{
     const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-    document.getElementById('manifestLink').href = URL.createObjectURL(blob);
+    const link = document.createElement('link'); link.rel='manifest'; link.href = URL.createObjectURL(blob);
+    document.head.appendChild(link);
   }catch(e){}
-
   if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
     try{
-      const swCode = `
-        self.addEventListener('install', e=>self.skipWaiting());
-        self.addEventListener('activate', e=>self.clients.claim());
-        self.addEventListener('fetch', e=>{});
-      `;
-      const swBlob = new Blob([swCode], {type:'application/javascript'});
-      const swUrl = URL.createObjectURL(swBlob);
+      const swCode = `self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{});`;
+      const swUrl = URL.createObjectURL(new Blob([swCode], {type:'application/javascript'}));
       navigator.serviceWorker.register(swUrl).catch(()=>{});
     }catch(e){}
   }
-
   let deferredPrompt = null;
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  window.addEventListener('beforeinstallprompt', (e)=>{
-    e.preventDefault();
-    deferredPrompt = e;
-    if(!isStandalone){
-      document.getElementById('installBtnLock').classList.remove('hidden-imp');
-      document.getElementById('installBtnApp').classList.remove('hidden-imp');
-    }
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+  window.addEventListener('beforeinstallprompt', e=>{
+    e.preventDefault(); deferredPrompt = e;
+    if(!isStandalone){ document.getElementById('installBtnLock').classList.remove('hidden-imp'); document.getElementById('installBtnApp').classList.remove('hidden-imp'); }
   });
   function handleInstallClick(){
-    if(deferredPrompt){
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.finally(()=>{ deferredPrompt=null; });
-    } else {
-      const modal = document.getElementById('installModal');
-      modal.classList.remove('hidden-imp'); modal.classList.add('flex');
-    }
+    if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.finally(()=>deferredPrompt=null); }
+    else { const modal=document.getElementById('installModal'); modal.classList.remove('hidden-imp'); modal.classList.add('flex'); }
   }
   document.getElementById('installBtnLock').addEventListener('click', handleInstallClick);
   document.getElementById('installBtnApp').addEventListener('click', handleInstallClick);
   document.getElementById('closeInstallModal').addEventListener('click', ()=>{
-    const modal = document.getElementById('installModal');
-    modal.classList.add('hidden-imp'); modal.classList.remove('flex');
+    const modal=document.getElementById('installModal'); modal.classList.add('hidden-imp'); modal.classList.remove('flex');
   });
-  // iOS has no beforeinstallprompt — always offer manual instructions button
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  if(isIOS && !isStandalone){
-    document.getElementById('installBtnLock').classList.remove('hidden-imp');
-    document.getElementById('installBtnApp').classList.remove('hidden-imp');
-  }
+  if(isIOS && !isStandalone){ document.getElementById('installBtnLock').classList.remove('hidden-imp'); document.getElementById('installBtnApp').classList.remove('hidden-imp'); }
 })();
 
+/* ---------- CONFIG LOADING (offline-first: defaults first, then try remote) ---------- */
+async function loadConfig(){
+  try{
+    const res = await fetch(DATA_JSON_URL + (DATA_JSON_URL.includes('?')?'&':'?') + 't=' + Date.now(), {cache:'no-store'});
+    if(res.ok){
+      const remote = await res.json();
+      CONFIG = Object.assign({}, DEFAULT_CONFIG, remote,
+        { meta: Object.assign({}, DEFAULT_CONFIG.meta, remote.meta),
+          theme: Object.assign({}, DEFAULT_CONFIG.theme, remote.theme),
+          trial: Object.assign({}, DEFAULT_CONFIG.trial, remote.trial),
+          contacts: Object.assign({}, DEFAULT_CONFIG.contacts, remote.contacts),
+          pricing: remote.pricing || DEFAULT_CONFIG.pricing,
+          sections: remote.sections || DEFAULT_CONFIG.sections,
+          licenses: Object.assign({}, DEFAULT_CONFIG.licenses, remote.licenses) });
+    }
+  }catch(e){ /* offline or not hosted yet: keep DEFAULT_CONFIG, app still fully usable */ }
+}
+
 /* ---------- INIT ---------- */
-applyLang();
-boot();
-setInterval(()=>{ if(!isLicenseActive()) boot(); }, 60000);
+(async function init(){
+  applyI18n();
+  await loadConfig();
+  applyConfig();
+  applyI18n();
+  boot();
+  setInterval(()=>{ if(!isLicenseActive() && !isTrialActive()) boot(); }, 30000);
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,52 @@
+{
+  "_comment": "Fichier de configuration Smart Logistics. Modifiez-le UNIQUEMENT via admin.html, puis remplacez ce fichier sur GitHub.",
+  "version": 1,
+  "updatedAt": "2026-07-30T00:00:00.000Z",
+  "meta": {
+    "appName": "Smart Logistics",
+    "logo": "./logo.png",
+    "subtitleFr": "Système de Gestion d'Entrepôt",
+    "subtitleDe": "Lagerverwaltungssystem",
+    "ogDescriptionFr": "Smart Logistics — Gestion d'entrepôt professionnelle, offline-first, bilingue FR/DE.",
+    "ogDescriptionDe": "Smart Logistics — Professionelle Lagerverwaltung, offline-first, zweisprachig FR/DE.",
+    "footerText": "Powered by EMPIRE CODE"
+  },
+  "theme": {
+    "primary": "#f5a524",
+    "accent": "#22d3ee",
+    "background": "#08090a",
+    "font": "Inter",
+    "boldTitles": true,
+    "italicSubtitles": false
+  },
+  "trial": { "days": 7 },
+  "contacts": {
+    "whatsapp": [
+      { "number": "2290196809106", "label": "WhatsApp" }
+    ],
+    "emails": ["empiredonko@gmail.com"]
+  },
+  "pricing": [
+    { "code": "M1", "days": 30, "fr": "Mensuel (30 jours)", "de": "Monatlich (30 Tage)", "price": 25500, "enabled": true },
+    { "code": "M2", "days": 60, "fr": "Bimestriel (60 jours)", "de": "Zweimonatlich (60 Tage)", "price": 45800, "enabled": true },
+    { "code": "M3", "days": 90, "fr": "Trimestriel (90 jours)", "de": "Vierteljährlich (90 Tage)", "price": 63800, "enabled": true },
+    { "code": "S1", "days": 180, "fr": "Semestriel (180 jours)", "de": "Halbjährlich (180 Tage)", "price": 115000, "enabled": true },
+    { "code": "A1", "days": 365, "fr": "Annuel (365 jours)", "de": "Jährlich (365 Tage)", "price": 190000, "enabled": true },
+    { "code": "A2", "days": 730, "fr": "2 ans (730 jours)", "de": "2 Jahre (730 Tage)", "price": 318000, "enabled": true },
+    { "code": "A3", "days": 1095, "fr": "3 ans (1095 jours)", "de": "3 Jahre (1095 Tage)", "price": 418000, "enabled": true },
+    { "code": "VIE", "days": 99999, "fr": "À vie (Accès illimité)", "de": "Lebenslang (Unbegrenzt)", "price": 950000, "enabled": true }
+  ],
+  "sections": [
+    { "id": "inv",  "labelFr": "Inventaire",   "labelDe": "Inventar",   "enabled": true, "order": 1 },
+    { "id": "mov",  "labelFr": "Mouvements",   "labelDe": "Bewegungen", "enabled": true, "order": 2 },
+    { "id": "sup",  "labelFr": "Fournisseurs", "labelDe": "Lieferanten","enabled": true, "order": 3 },
+    { "id": "wh",   "labelFr": "Entrepôt",     "labelDe": "Lager",      "enabled": true, "order": 4 },
+    { "id": "task", "labelFr": "Tâches",       "labelDe": "Aufgaben",   "enabled": true, "order": 5 },
+    { "id": "rep",  "labelFr": "Rapport",      "labelDe": "Bericht",    "enabled": true, "order": 6 },
+    { "id": "arch", "labelFr": "Architecture", "labelDe": "Architektur","enabled": true, "order": 7 },
+    { "id": "set",  "labelFr": "Paramètres",   "labelDe": "Einstellungen","enabled": true, "order": 8 }
+  ],
+  "licenses": {
+    "bannedDevices": []
+  }
+}
