@@ -1274,7 +1274,11 @@ renderLangButtons();
   }
 
   if('serviceWorker' in navigator && isSecure){
-    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.info('Smart Logistics: service worker enregistré, hors-ligne activé.', reg.scope))
+      .catch(err => console.warn('Smart Logistics: échec d\'enregistrement du service worker — le mode hors-ligne ne fonctionnera pas tant que ce n\'est pas résolu.', err));
+  } else if (!isSecure) {
+    console.warn('Smart Logistics: service worker non enregistré — la page doit être servie en HTTPS (pas file://) pour activer le mode hors-ligne.');
   }
 
   let deferredPrompt = null;
