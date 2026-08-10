@@ -354,7 +354,7 @@
           <div class="flex gap-2">
             <button id="backupBtn" class="flex-1 px-3 py-2 rounded border border-base-700 text-sm" data-i18n="backupBtn">⬇ Exporter</button>
             <label class="flex-1 px-3 py-2 rounded border border-base-700 text-sm text-center cursor-pointer" data-i18n="restoreBtn">⬆ Importer
-              <input id="restoreInput" type="file" accept="application/json" class="hidden-imp">
+              <input id="restoreInput" type="file" accept=".json,application/json,text/plain" class="hidden-imp">
             </label>
           </div>
         </div>
@@ -676,7 +676,11 @@ function showTab(tab){
 }
 
 /* ---------- SECURITY / ANTI-BOT DETERRENTS (client-side best-effort only) ---------- */
-document.addEventListener('contextmenu', e=>e.preventDefault());
+document.addEventListener('contextmenu', e=>{
+  const tag = e.target.tagName;
+  if(tag==='INPUT' || tag==='TEXTAREA' || e.target.isContentEditable) return; // allow paste/copy menu in form fields
+  e.preventDefault();
+});
 document.addEventListener('keydown', e=>{
   if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key)) || (e.ctrlKey&&e.key==='u')) e.preventDefault();
 });
