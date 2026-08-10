@@ -57,6 +57,8 @@ Un compte à rebours affiche en temps réel le temps restant de votre essai. Pas
 
 | Formule | Durée | Prix |
 |---|---|---|
+| Hebdomadaire | 7 jours | 8 000 F CFA |
+| Bihebdomadaire | 14 jours | 15 000 F CFA |
 | Mensuel | 30 jours | 25 500 F CFA |
 | Bimestriel | 60 jours | 45 800 F CFA |
 | Trimestriel | 90 jours | 63 800 F CFA |
@@ -67,6 +69,19 @@ Un compte à rebours affiche en temps réel le temps restant de votre essai. Pas
 | À vie | Accès illimité | 950 000 F CFA |
 
 *Les tarifs affichés dans l'application font foi et peuvent évoluer.*
+
+### 💱 Prix dans votre monnaie locale
+
+Un sélecteur de pays au-dessus de la grille tarifaire permet d'afficher une **estimation** du prix dans votre devise locale (EUR, USD, GBP, CHF…) avec la TVA locale indicative incluse. Ces montants sont **fournis à titre informatif uniquement** — le tarif de référence, contractuel, reste toujours en **F CFA**.
+
+---
+
+## 🌐 Langues disponibles
+
+- 🇫🇷 Français
+- 🇩🇪 Deutsch (Allemand)
+
+Changez de langue à tout moment via les drapeaux 🇫🇷 / 🇩🇪 en haut de l'écran.
 
 ---
 
@@ -93,15 +108,6 @@ Une fois installée, l'application s'ouvre en plein écran comme une app classiq
 - Toutes vos données (inventaire, mouvements, fournisseurs, tâches, historique) sont stockées **uniquement sur votre appareil**, jamais transmises à un serveur.
 - Rien n'est perdu en cas de fermeture du navigateur : les données restent enregistrées localement.
 - Pensez à utiliser régulièrement la fonction **Sauvegarde** (dans *Paramètres*) pour exporter une copie de vos données.
-
----
-
-## 🌐 Langues disponibles
-
-- 🇫🇷 Français
-- 🇩🇪 Deutsch (Allemand)
-
-Changez de langue à tout moment via le bouton **FR / DE** en haut de l'écran.
 
 ---
 
