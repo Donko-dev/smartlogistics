@@ -8,18 +8,31 @@
 
 <!-- ============ SOCIAL SHARE PREVIEW (Open Graph / Twitter) ============
      IMPORTANT : ces balises sont statiques (les robots de partage n'exécutent
-     pas le JavaScript). Si vous changez le nom/description/logo depuis admin.html,
-     pensez à modifier aussi ce bloc + à remplacer le fichier logo.png sur
-     GitHub (une image data:// ne fonctionne PAS pour les aperçus WhatsApp/FB). -->
+     pas le JavaScript). Deux règles à respecter pour que le logo s'affiche sur
+     WhatsApp/Facebook/SMS/Stories :
+      1) og:image DOIT être une URL ABSOLUE (https://votre-domaine/logo.png),
+         jamais un chemin relatif ni une image data:// — les robots de partage
+         échouent silencieusement sinon (texte affiché, mais pas de logo).
+      2) Si vous changez de domaine d'hébergement ou de nom/logo depuis
+         admin.html, mettez aussi à jour og:url et og:image ci-dessous, et
+         remplacez le fichier logo.png sur GitHub.
+     WhatsApp met le résultat en cache assez longtemps : après une modification,
+     testez avec https://developers.facebook.com/tools/debug/ (bouton
+     "Scrape Again") pour forcer le rafraîchissement de l'aperçu. -->
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Smart Logistics">
 <meta property="og:title" content="Smart Logistics — Système de Gestion d'Entrepôt">
 <meta property="og:description" content="Application WMS professionnelle, offline-first, bilingue FR/DE. Inventaire, placement d'entrepôt, rapports.">
-<meta property="og:image" content="./logo.png">
-<meta property="og:url" content="">
+<meta property="og:image" content="https://donko-dev.github.io/smartlogistics/logo.png">
+<meta property="og:image:secure_url" content="https://donko-dev.github.io/smartlogistics/logo.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:type" content="image/png">
+<meta property="og:url" content="https://donko-dev.github.io/smartlogistics/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Smart Logistics — Système de Gestion d'Entrepôt">
 <meta name="twitter:description" content="Application WMS professionnelle, offline-first, bilingue FR/DE.">
-<meta name="twitter:image" content="./logo.png">
+<meta name="twitter:image" content="https://donko-dev.github.io/smartlogistics/logo.png">
 
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACN0lEQVR4nO2XP2gTYRiHn/suaXK5i7WJgsSCOAhWwUXoUv+g1UXUoehQsKBgdZMq1UlBHAVpnQRxEBxtQLoURJSOhroU2sGhQymlQtPG9swlqblzkMj1csnF3p3t4G86vnt5f8/3fS937yvhoriSsNzW/apkFCXn2qYFu3H+VSZQ8/TNRVeQPw8186CNG4HUIKRG5nbiIOSWu2QUJdEsIEjZc9q9hLPgwjBvlDuuJCxhJwrT3AlR8xTNgv+F/gNEvAJkAYO9KtdOqBzYIxORoVix+FYweTy2xvvpEgBv76Y5ezTGim5yaGgpOIDhi0keXE7yaabMlZE8esnkcCZKf49Ce6Luy/rX8gTo70kA8HGmzFKhCsDUXIWpuYpv85YAOtTfZTJ0QaMtApOzZabnN6iagfh7F+HkbBmAtCZ41LeLDw/38nV0H88G2klp/mvYM8O9NwXGvxj8tO14d0Jw/bTKy8EO3wCeV7C8bnLjxSop7TtnjsQ4fyxOX7eCLOBUV4yoLLFR3Xr74AlQ04puks0ZZHMGqz9MbvWq6CXTlzm0cAXvhtPcPqfStT+C0ibRmZI5fjAKwNhnw5c5tHAC88tVBk6q3L+URItLWBYs5KuMTug8HV+vi09poq6peT6h8yS7tjWAO68LXiEAXB3JtxTn1Lb/C7YdwPMKMrkFXwaL3Z1N3+/8E/DagV8JqO/TwpSz/xTOcSlMCGfuTXNBo749DHO7184YzZwQYYB4DqeNQIKU23j+C9bq0ERLBXcvAAAAAElFTkSuQmCC">
 <link rel="manifest" href="./manifest.json">
