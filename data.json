@@ -1,15 +1,14 @@
 {
-  "_comment": "Fichier de configuration Smart Logistics. Modifiez-le UNIQUEMENT via admin.html, puis remplacez ce fichier sur GitHub.",
   "version": 1,
-  "updatedAt": "2026-07-30T00:00:00.000Z",
+  "updatedAt": "2026-08-10T05:40:21.788Z",
   "meta": {
     "appName": "Smart Logistics",
-    "logo": "./logo.png",
+    "logo": "data:image/png;base64,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",
     "subtitleFr": "Système de Gestion d'Entrepôt",
     "subtitleDe": "Lagerverwaltungssystem",
+    "footerText": "Powered by EMPIRE CODE",
     "ogDescriptionFr": "Smart Logistics — Gestion d'entrepôt professionnelle, offline-first, bilingue FR/DE.",
-    "ogDescriptionDe": "Smart Logistics — Professionelle Lagerverwaltung, offline-first, zweisprachig FR/DE.",
-    "footerText": "Powered by EMPIRE CODE"
+    "ogDescriptionDe": "Smart Logistics — Professionelle Lagerverwaltung, offline-first, zweisprachig FR/DE."
   },
   "theme": {
     "primary": "#f5a524",
@@ -17,38 +16,164 @@
     "background": "#08090a",
     "font": "Inter",
     "boldTitles": true,
-    "italicSubtitles": false
+    "italicSubtitles": true
   },
-  "trial": { "days": 7 },
+  "trial": {
+    "days": 7
+  },
   "contacts": {
     "whatsapp": [
-      { "number": "2290196809106", "label": "WhatsApp" }
+      {
+        "number": "2290196809106",
+        "label": "WhatsApp"
+      }
     ],
-    "emails": ["empiredonko@gmail.com"]
+    "emails": [
+      "empiredonko@gmail.com"
+    ]
   },
   "pricing": [
-    { "code": "W1", "days": 7, "fr": "Hebdomadaire (7 jours)", "de": "Wöchentlich (7 Tage)", "price": 8000, "enabled": true },
-    { "code": "W2", "days": 14, "fr": "Bihebdomadaire (14 jours)", "de": "Zweiwöchentlich (14 Tage)", "price": 15000, "enabled": true },
-    { "code": "M1", "days": 30, "fr": "Mensuel (30 jours)", "de": "Monatlich (30 Tage)", "price": 25500, "enabled": true },
-    { "code": "M2", "days": 60, "fr": "Bimestriel (60 jours)", "de": "Zweimonatlich (60 Tage)", "price": 45800, "enabled": true },
-    { "code": "M3", "days": 90, "fr": "Trimestriel (90 jours)", "de": "Vierteljährlich (90 Tage)", "price": 63800, "enabled": true },
-    { "code": "S1", "days": 180, "fr": "Semestriel (180 jours)", "de": "Halbjährlich (180 Tage)", "price": 115000, "enabled": true },
-    { "code": "A1", "days": 365, "fr": "Annuel (365 jours)", "de": "Jährlich (365 Tage)", "price": 190000, "enabled": true },
-    { "code": "A2", "days": 730, "fr": "2 ans (730 jours)", "de": "2 Jahre (730 Tage)", "price": 318000, "enabled": true },
-    { "code": "A3", "days": 1095, "fr": "3 ans (1095 jours)", "de": "3 Jahre (1095 Tage)", "price": 418000, "enabled": true },
-    { "code": "VIE", "days": 99999, "fr": "À vie (Accès illimité)", "de": "Lebenslang (Unbegrenzt)", "price": 950000, "enabled": true }
+    {
+      "code": "W1",
+      "days": 7,
+      "fr": "Hebdomadaire (7 jours)",
+      "de": "Wöchentlich (7 Tage)",
+      "price": 8000,
+      "enabled": true
+    },
+    {
+      "code": "W2",
+      "days": 14,
+      "fr": "Bihebdomadaire (14 jours)",
+      "de": "Zweiwöchentlich (14 Tage)",
+      "price": 15000,
+      "enabled": true
+    },
+    {
+      "code": "M1",
+      "days": 30,
+      "fr": "Mensuel (30 jours)",
+      "de": "Monatlich (30 Tage)",
+      "price": 25500,
+      "enabled": true
+    },
+    {
+      "code": "M2",
+      "days": 60,
+      "fr": "Bimestriel (60 jours)",
+      "de": "Zweimonatlich (60 Tage)",
+      "price": 45800,
+      "enabled": true
+    },
+    {
+      "code": "M3",
+      "days": 90,
+      "fr": "Trimestriel (90 jours)",
+      "de": "Vierteljährlich (90 Tage)",
+      "price": 63800,
+      "enabled": true
+    },
+    {
+      "code": "S1",
+      "days": 180,
+      "fr": "Semestriel (180 jours)",
+      "de": "Halbjährlich (180 Tage)",
+      "price": 115000,
+      "enabled": true
+    },
+    {
+      "code": "A1",
+      "days": 365,
+      "fr": "Annuel (365 jours)",
+      "de": "Jährlich (365 Tage)",
+      "price": 190000,
+      "enabled": true
+    },
+    {
+      "code": "A2",
+      "days": 730,
+      "fr": "2 ans (730 jours)",
+      "de": "2 Jahre (730 Tage)",
+      "price": 318000,
+      "enabled": true
+    },
+    {
+      "code": "A3",
+      "days": 1095,
+      "fr": "3 ans (1095 jours)",
+      "de": "3 Jahre (1095 Tage)",
+      "price": 418000,
+      "enabled": true
+    },
+    {
+      "code": "VIE",
+      "days": 99999,
+      "fr": "À vie (Accès illimité)",
+      "de": "Lebenslang (Unbegrenzt)",
+      "price": 950000,
+      "enabled": true
+    }
   ],
   "sections": [
-    { "id": "inv",  "labelFr": "Inventaire",   "labelDe": "Inventar",   "enabled": true, "order": 1 },
-    { "id": "mov",  "labelFr": "Mouvements",   "labelDe": "Bewegungen", "enabled": true, "order": 2 },
-    { "id": "sup",  "labelFr": "Fournisseurs", "labelDe": "Lieferanten","enabled": true, "order": 3 },
-    { "id": "wh",   "labelFr": "Entrepôt",     "labelDe": "Lager",      "enabled": true, "order": 4 },
-    { "id": "task", "labelFr": "Tâches",       "labelDe": "Aufgaben",   "enabled": true, "order": 5 },
-    { "id": "rep",  "labelFr": "Rapport",      "labelDe": "Bericht",    "enabled": true, "order": 6 },
-    { "id": "arch", "labelFr": "Architecture", "labelDe": "Architektur","enabled": true, "order": 7 },
-    { "id": "set",  "labelFr": "Paramètres",   "labelDe": "Einstellungen","enabled": true, "order": 8 }
+    {
+      "id": "inv",
+      "labelFr": "Inventaire",
+      "labelDe": "Inventar",
+      "enabled": true,
+      "order": 1
+    },
+    {
+      "id": "mov",
+      "labelFr": "Mouvements",
+      "labelDe": "Bewegungen",
+      "enabled": true,
+      "order": 2
+    },
+    {
+      "id": "sup",
+      "labelFr": "Fournisseurs",
+      "labelDe": "Lieferanten",
+      "enabled": true,
+      "order": 3
+    },
+    {
+      "id": "wh",
+      "labelFr": "Entrepôt",
+      "labelDe": "Lager",
+      "enabled": true,
+      "order": 4
+    },
+    {
+      "id": "task",
+      "labelFr": "Tâches",
+      "labelDe": "Aufgaben",
+      "enabled": true,
+      "order": 5
+    },
+    {
+      "id": "rep",
+      "labelFr": "Rapport",
+      "labelDe": "Bericht",
+      "enabled": true,
+      "order": 6
+    },
+    {
+      "id": "arch",
+      "labelFr": "Architecture",
+      "labelDe": "Architektur",
+      "enabled": true,
+      "order": 7
+    },
+    {
+      "id": "set",
+      "labelFr": "Paramètres",
+      "labelDe": "Einstellungen",
+      "enabled": true,
+      "order": 8
+    }
   ],
   "licenses": {
     "bannedDevices": []
-  }
+  },
+  "_comment": "Fichier de configuration Smart Logistics. Modifiez-le UNIQUEMENT via admin.html, puis remplacez ce fichier sur GitHub."
 }
